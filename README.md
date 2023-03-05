@@ -1,6 +1,9 @@
+## TD-02 // Groupe 3 // Sudoku
+## https://github.com/uvsq22205472/Sudoku
 Ce répertoire était crée pour le module IN200 de l'UFR des Sciences de UVSQ.
 Le but est de recréer le jeu de Sudoku avec Python pour ce module.
 
+## Consignes
 # Objectif général
 Le sudoku est un jeu populaire de placement de nombres basé sur la logique combinatoire. L’objectif est
 de remplir une grille 9 × 9 avec des chiffres de sorte que chaque colonne, chaque ligne et chacune des neuf
