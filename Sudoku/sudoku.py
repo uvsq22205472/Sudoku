@@ -33,6 +33,7 @@ global Canvas_Height
 global Canvas_Width
 Canvas_Width = 500
 Canvas_Height = 500
+#test
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 ###### Initialisation du tableau du jeu
 root = Tk()
