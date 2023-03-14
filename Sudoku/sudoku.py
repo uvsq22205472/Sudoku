@@ -21,8 +21,13 @@ def InitializeBoard(Board_Root):
 def Create81Buttons(Board_Root):
     """
     """
-    for IterationNum in range(0,3):
-        
+    for vertical_iteration
+    for horizontal_iteration in range(1,4):
+        ("Region" + str(iteration) = Button(root,text=Sudoku_Dict["Cell_" + str(iteration)],))
+        ("Region" + str(iteration).grid(row=1),column=()))
+
+
+
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 global Canvas_Height
 global Canvas_Width
