@@ -44,3 +44,10 @@ Sudoku_RigidNumbers = []
 
 ######################### FIN DU PROGRAMME
 root.mainloop()
+
+
+
+
+
+
+def 
