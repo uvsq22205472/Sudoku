@@ -47,23 +47,30 @@ Sudoku_Canvas = Canvas(root,bg="pink", width= Canvas_Width, height= Canvas_Heigh
 Sudoku_Canvas.grid(column=Canvas_Padding,row=Canvas_Padding,columnspan=20,rowspan=20)
 
 
-for Y in range(0,4):
-    for X in range(0,4):
-        #Sudoku_Canvas.create_rectangle((((Y-1)*200),((X-1)*200))    A TERMINER +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 
 # le code en bas fonctionne mais c'est pas joli
-#Sudoku_Canvas.create_rectangle((0,0),(200,200),width=2,outline=ThickLine_Color)
-#Sudoku_Canvas.create_rectangle((0,200),(200,400),width=2,outline=ThickLine_Color)
-#Sudoku_Canvas.create_rectangle((0,400),(200,600),width=2,outline=ThickLine_Color)
+for i in range(9):
+    Sudoku_Canvas.create_line((200/3)*i,0,(200/3)*i,600,width=1, fill=Line_Color)
+for i in range(9):
+    Sudoku_Canvas.create_line(0,(200/3)*i,600,(200/3)*i,width=1,fill=Line_Color)
 
-#Sudoku_Canvas.create_rectangle((200,0),(400,200),width=2,outline=ThickLine_Color)
-#Sudoku_Canvas.create_rectangle((200,200),(400,400),width=2,outline=ThickLine_Color)
-#Sudoku_Canvas.create_rectangle((200,400),(400,600),width=2,outline=ThickLine_Color)
+Sudoku_Canvas.create_rectangle((0,0),(200,200),width=2,outline=ThickLine_Color)
+Sudoku_Canvas.create_rectangle((0,200),(200,400),width=2,outline=ThickLine_Color)
+Sudoku_Canvas.create_rectangle((0,400),(200,600),width=2,outline=ThickLine_Color)
 
-#Sudoku_Canvas.create_rectangle((400,0),(600,200),width=2,outline=ThickLine_Color)
-#Sudoku_Canvas.create_rectangle((400,200),(600,400),width=2,outline=ThickLine_Color)
-#Sudoku_Canvas.create_rectangle((400,400),(600,600),width=2,outline=ThickLine_Color)
+Sudoku_Canvas.create_rectangle((200,0),(400,200),width=2,outline=ThickLine_Color)
+Sudoku_Canvas.create_rectangle((200,200),(400,400),width=2,outline=ThickLine_Color)
+Sudoku_Canvas.create_rectangle((200,400),(400,600),width=2,outline=ThickLine_Color)
+
+Sudoku_Canvas.create_rectangle((400,0),(600,200),width=2,outline=ThickLine_Color)
+Sudoku_Canvas.create_rectangle((400,200),(600,400),width=2,outline=ThickLine_Color)
+Sudoku_Canvas.create_rectangle((400,400),(600,600),width=2,outline=ThickLine_Color)
 #
+#Sudoku_Canvas.create_line((200/3),0,(200/3),600,width=1,fill=Line_Color)
+#for Column in range(0,10):
+    #for Row in range(0,10):
+        #Sudoku_Canvas.create_rectangle((0+((Column-1)*(200/3)),(0+((Row-1)*(200/3))),(200+((Column-1)*(200/3)),(0+((Row-1)*(200/3))))),width=1,outline=Line_Color)
+
 
 
 
@@ -72,7 +79,6 @@ for Y in range(0,4):
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 ###### Création du dictionnaire du jeu 
 ###### + liste des nombres qui ne peuvent pas êtres changés
-
 Sudoku_Dict = {}
 for CellNumber in range(1,82):
     Sudoku_Dict[("Cell_"+str(CellNumber))] = "X"
