@@ -139,4 +139,4 @@ menu_aide.add_command(label="Regle du Sudoku",command=ouvrir_lien_regles)
 root.config(menu=barre_de_menus)
 
 root.mainloop()
-#fin
+#fin du code
