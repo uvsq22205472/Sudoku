@@ -49,8 +49,9 @@ Sudoku_Canvas.grid(column=Canvas_Padding,row=Canvas_Padding,columnspan=20,rowspa
 
 for Y in range(0,4):
     for X in range(0,4):
-        Sudoku_Canvas.create_rectangle((((Y-1)*200),((X-1)*200))
+        #Sudoku_Canvas.create_rectangle((((Y-1)*200),((X-1)*200))    A TERMINER +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 
+# le code en bas fonctionne mais c'est pas joli
 #Sudoku_Canvas.create_rectangle((0,0),(200,200),width=2,outline=ThickLine_Color)
 #Sudoku_Canvas.create_rectangle((0,200),(200,400),width=2,outline=ThickLine_Color)
 #Sudoku_Canvas.create_rectangle((0,400),(200,600),width=2,outline=ThickLine_Color)
