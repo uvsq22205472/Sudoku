@@ -90,4 +90,31 @@ grille_difficile5 = [[0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [
 Region1 = Button(root,text=Sudoku_Dict["Cell_1"],)
 Region1.grid(row=1,column=1)
 
+#Fonction qui vérifie si la valeur est comprise entre 0 et 9 uniquement
+def verifie_case(widget_verification, valeur):
+    if valeur.isdigit() and int(valeur) in range(10):
+        # Définition de la valeur de la case
+        widget_verification.config(bg="grey")
+        label = root.Label(widget_verification, text=valeur)
+        label.pack()
+    else:
+        widget_verification.config(bg="red")
+        label = root.Label(widget_verification, text="Erreur")
+        label.pack()
+
+#Fonction qui permet de choisir pour ensuite mettre un nombre de 0 à 9
+def click_case(event):
+    widget = event.widget
+    x = widget.grid_info()['row']
+    y = widget.grid_info()['column']
+
+    input_window = root.Toplevel()
+    input_window.title("Champs de saisie (valeur entre 0 et 9): ")
+    input_window.geometry("400x70")
+
+    input_entry = root.Entry(input_window, width=5)
+    input_entry.pack(pady=10)
+    submit_button = root.Button(input_window, text="Valider Valeur", command=lambda: verifie_case(widget, input_entry.get()))
+    submit_button.pack()
+
 root.mainloop()
