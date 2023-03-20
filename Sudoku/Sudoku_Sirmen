@@ -1,5 +1,6 @@
 from tkinter import *
 import random
+import webbrowser
 
 global Canvas_Height
 global Canvas_Width
@@ -128,9 +129,12 @@ menu_grille.add_command(label="Grille Difficile", command=grille_difficile)
 menu_grille.add_separator()
 menu_grille.add_command(label="Exit", command=root.quit)
     #menus aide
+def ouvrir_lien_regles():
+    webbrowser.open('https://sudoku.com/fr/comment-jouer/regles-de-sudoku-pour-les-debutants-complets/')
+
 menu_aide = Menu(barre_de_menus, tearoff=0)
 barre_de_menus.add_cascade(label="Aide", menu=menu_aide)
-menu_aide.add_command(label="Regle du Sudoku", command=grille_facile)
+menu_aide.add_command(label="Regle du Sudoku",command=ouvrir_lien_regles)
 
 root.config(menu=barre_de_menus)
 
