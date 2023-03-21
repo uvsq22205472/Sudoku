@@ -1,7 +1,7 @@
 ############# SUDOKU #############
 ###          Crée par:         ###
-###  (RP)  Oliwier Szmyt       ###
-###  (QC)   Azzi Aicha         ###
+###  (RP)  Oliwier Szmyt       ###  
+###  (QC)   Azzi Aicha         ###  
 ###          Joey Zhan         ###
 ###         Sirmen Reka        ###
 ##################################
@@ -12,9 +12,9 @@ import webbrowser
 
 global Canvas_Height
 global Canvas_Width
-Canvas_Width = 500
-Canvas_Height = 500
-
+Canvas_Width = 600
+Canvas_Height = 600
+Canvas_Padding = 100
 Background_Color = "#CCCCCC"
 ThickLine_Color = "white"
 Line_Color = "gray"
@@ -67,8 +67,10 @@ Sudoku_Dict = {}
 for CellNumber in range(1,82):
     Sudoku_Dict[("Cell_"+str(CellNumber))] = "X"
 print(Sudoku_Dict)
-#Creation de 
+#
 Sudoku_RigidNumbers = []
+# ---> Liste / tableau contenant les cases ( ex: 20,51,3 ) qui ne pourront pas être changés au milieu
+# ---> de la partie.
 
 def choose_difficulty_easy(facile):
     facile = random.choice(grille_facile)
