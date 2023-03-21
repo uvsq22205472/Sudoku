@@ -1,9 +1,9 @@
 ############# SUDOKU #############
 ###          Crée par:         ###
-###  (RP)  SZMYT Oliwier       ###
-###        -------------       ###
-###        -------------       ###
-###        -------------       ###
+###  (RP)  Oliwier Szmyt       ###
+###  (QC)   Azzi Aicha         ###
+###          Joey Zhan         ###
+###         Sirmen Reka        ###
 ##################################
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 from tkinter import *
@@ -27,28 +27,24 @@ Canvas_Width = 600
 Canvas_Height = 600
 Canvas_Padding = 20
 
+Background_Color = "#CCCCCC"
 ThickLine_Color = "white"
 Line_Color = "gray"
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 ###### Initialisation du tableau du jeu
 root = Tk()
-root.title("SUDOKuU")
+root.title("SUDOKU")
 root.geometry("800x600")
 # => Fonction pour changer longeur/largeur de la fênetre trouvé après recherches sur
 ####### https://www.tutorialspoint.com/how-to-place-an-image-into-a-frame-in-tkinter
 
-# Il y a une maniere plus interessante de faire ca avec une triple boucle for.
-
-
-
-
-
-Sudoku_Canvas = Canvas(root,bg="pink", width= Canvas_Width, height= Canvas_Height)
+# Lignes
+Sudoku_Canvas = Canvas(root,bg=Background_Color, width= Canvas_Width, height= Canvas_Height)
 Sudoku_Canvas.grid(column=Canvas_Padding,row=Canvas_Padding,columnspan=20,rowspan=20)
 
 
 
-# le code en bas fonctionne mais c'est pas joli
+# le code en bas fonctionne mais c'est pas joli, il faudra faire une triple boucle for 
 for i in range(9):
     Sudoku_Canvas.create_line((200/3)*i,0,(200/3)*i,600,width=1, fill=Line_Color)
 for i in range(9):
@@ -77,16 +73,16 @@ Sudoku_Canvas.create_rectangle((400,400),(600,600),width=2,outline=ThickLine_Col
 
 
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-###### Création du dictionnaire du jeu 
-###### + liste des nombres qui ne peuvent pas êtres changés
 Sudoku_Dict = {}
+# ---> Dictionnaire contenant les cellules de Sudoku en clés (de gauche à droite, de haut en bas)
+# ---> et les valeurs étant le nombre contenus dans ces cellules.
 for CellNumber in range(1,82):
     Sudoku_Dict[("Cell_"+str(CellNumber))] = "X"
-#print(Sudoku_Dict)
+print(Sudoku_Dict)
 #Creation de 
-
 Sudoku_RigidNumbers = []
-# Liste des nombres qui ne peuvent pas etre changes.
+# ---> Liste / Tableau des nombres de cases ( ex: 11, 20, 69 ) des nombres qui ne pourront pas 
+# ---> être changés lors d'une partie.
 
 
 
