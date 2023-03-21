@@ -22,7 +22,7 @@ Line_Color = "gray"
 ###### Initialisation du tableau du jeu
 root = Tk()
 root.title("SUDOKU")
-root.geometry("800x600")
+root.geometry("600x600")
 # => Fonction pour changer longeur/largeur de la fênetre trouvé après recherches sur
 ####### https://www.tutorialspoint.com/how-to-place-an-image-into-a-frame-in-tkinter
 
@@ -141,8 +141,6 @@ grille_difficile5 = [[0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [
                      [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0],
                      [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0]]
 
-Region1 = Button(root,text=Sudoku_Dict["Cell_1"],)
-Region1.grid(row=1,column=1)
 
 #Fonction qui vérifie si la valeur est comprise entre 0 et 9 uniquement
 def verifie_case(widget_verification, valeur):
