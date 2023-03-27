@@ -19,45 +19,41 @@ ThickLine_Color = "white"
 Line_Color = "gray"
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 ###### Initialisation du tableau du jeu
+
 root = Tk()
 root.title("SUDOKU")
 root.geometry("600x600")
-# => Fonction pour changer longeur/largeur de la fênetre trouvé après recherches sur
-####### https://www.tutorialspoint.com/how-to-place-an-image-into-a-frame-in-tkinter
 
-# Lignes
 Sudoku_Canvas = Canvas(root,bg=Background_Color, width= Canvas_Width, height= Canvas_Height)
 Sudoku_Canvas.grid(column=Canvas_Padding,row=Canvas_Padding,columnspan=20,rowspan=20)
 
+#boucle for pour dessiner les lignes et les colonnes de la grille
+for i in range(10):
+    if i % 3 == 0:
+        width = 2
+    else:
+        width = 1
+    # ligne verticale
+    Sudoku_Canvas.create_line((i/9)*Canvas_Width, 0, (i/9)*Canvas_Width, Canvas_Height, width=width, fill=Line_Color)
+    # ligne horizontale
+    Sudoku_Canvas.create_line(0, (i/9)*Canvas_Height, Canvas_Width, (i/9)*Canvas_Height, width=width, fill=Line_Color)
 
+#boucle for pour dessiner les regions
+for i in range(0, 9, 3):
+    for j in range(0, 9, 3):
+        x1, y1 = (j/9)*Canvas_Width, (i/9)*Canvas_Height
+        x2, y2 = ((j+3)/9)*Canvas_Width, ((i+3)/9)*Canvas_Height
+        Sudoku_Canvas.create_rectangle(x1, y1, x2, y2, width=6,fill='gray80', outline=ThickLine_Color)
 
-# le code en bas fonctionne mais c'est pas joli, il faudra faire une triple boucle for 
-for i in range(9):
-    Sudoku_Canvas.create_line((200/3)*i,0,(200/3)*i,600,width=1, fill=Line_Color)
-for i in range(9):
-    Sudoku_Canvas.create_line(0,(200/3)*i,600,(200/3)*i,width=1,fill=Line_Color)
-
-Sudoku_Canvas.create_rectangle((0,0),(200,200),width=2,outline=ThickLine_Color)
-Sudoku_Canvas.create_rectangle((0,200),(200,400),width=2,outline=ThickLine_Color)
-Sudoku_Canvas.create_rectangle((0,400),(200,600),width=2,outline=ThickLine_Color)
-
-Sudoku_Canvas.create_rectangle((200,0),(400,200),width=2,outline=ThickLine_Color)
-Sudoku_Canvas.create_rectangle((200,200),(400,400),width=2,outline=ThickLine_Color)
-Sudoku_Canvas.create_rectangle((200,400),(400,600),width=2,outline=ThickLine_Color)
-
-Sudoku_Canvas.create_rectangle((400,0),(600,200),width=2,outline=ThickLine_Color)
-Sudoku_Canvas.create_rectangle((400,200),(600,400),width=2,outline=ThickLine_Color)
-Sudoku_Canvas.create_rectangle((400,400),(600,600),width=2,outline=ThickLine_Color)
-#
-#Sudoku_Canvas.create_line((200/3),0,(200/3),600,width=1,fill=Line_Color)
-#for Column in range(0,10):
-    #for Row in range(0,10):
-        #Sudoku_Canvas.create_rectangle((0+((Column-1)*(200/3)),(0+((Row-1)*(200/3))),(200+((Column-1)*(200/3)),(0+((Row-1)*(200/3))))),width=1,outline=Line_Color)
-
-
-
-
-
+#boucle for pour dessiner les rectangles
+for i in range(0, 9):
+    for j in range(0, 9):
+        x1, y1 = (j/9)*Canvas_Width, (i/9)*Canvas_Height
+        x2, y2 = ((j+1)/9)*Canvas_Width, ((i+1)/9)*Canvas_Height
+        Sudoku_Canvas.create_rectangle(x1, y1, x2, y2, width=1, outline=Line_Color)
+        #ajouter une zone de texte à chaque rectangle
+        #cell = Entry(Sudoku_Canvas, width=3, font=("Helvetica", 20))
+        #Sudoku_Canvas.create_window((x1+x2)//2, (y1+y2)//2, window=cell)
 
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 Sudoku_Dict = {}
@@ -187,6 +183,5 @@ barre_de_menus.add_cascade(label="Aide", menu=menu_aide)
 menu_aide.add_command(label="Regle du Sudoku",command=ouvrir_lien_regles)
 
 root.config(menu=barre_de_menus)
-
 root.mainloop()
 #fin du code
