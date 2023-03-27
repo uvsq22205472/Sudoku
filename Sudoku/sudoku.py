@@ -14,9 +14,6 @@ global Canvas_Width
 Canvas_Width = 600
 Canvas_Height = 600
 Canvas_Padding = 100
-Background_Color = "#CCCCCC"
-ThickLine_Color = "white"
-Line_Color = "gray"
 
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-Initialisation du tableau du jeu-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
@@ -24,7 +21,7 @@ root = Tk()
 root.title("SUDOKU")
 root.geometry("600x600")
 
-Sudoku_Canvas = Canvas(root,bg=Background_Color, width= Canvas_Width, height= Canvas_Height)
+Sudoku_Canvas = Canvas(root,bg='#CCCCCC', width= Canvas_Width, height= Canvas_Height)
 Sudoku_Canvas.grid(column=Canvas_Padding,row=Canvas_Padding,columnspan=20,rowspan=20)
 
 #boucle for pour dessiner les lignes et les colonnes de la grille
@@ -34,23 +31,23 @@ for i in range(10):
     else:
         width = 1
     # ligne verticale
-    Sudoku_Canvas.create_line((i/9)*Canvas_Width, 0, (i/9)*Canvas_Width, Canvas_Height, width=width, fill=Line_Color)
+    Sudoku_Canvas.create_line((i/9)*Canvas_Width, 0, (i/9)*Canvas_Width, Canvas_Height, width=width, fill="gray")
     # ligne horizontale
-    Sudoku_Canvas.create_line(0, (i/9)*Canvas_Height, Canvas_Width, (i/9)*Canvas_Height, width=width, fill=Line_Color)
+    Sudoku_Canvas.create_line(0, (i/9)*Canvas_Height, Canvas_Width, (i/9)*Canvas_Height, width=width, fill="gray")
 
 #boucle for pour dessiner les regions
 for i in range(0, 9, 3):
     for j in range(0, 9, 3):
         x1, y1 = (j/9)*Canvas_Width, (i/9)*Canvas_Height
         x2, y2 = ((j+3)/9)*Canvas_Width, ((i+3)/9)*Canvas_Height
-        Sudoku_Canvas.create_rectangle(x1, y1, x2, y2, width=6,fill='gray80', outline=ThickLine_Color)
+        Sudoku_Canvas.create_rectangle(x1, y1, x2, y2, width=6,fill='gray80', outline="white")
 
 #boucle for pour dessiner les rectangles
 for i in range(0, 9):
     for j in range(0, 9):
         x1, y1 = (j/9)*Canvas_Width, (i/9)*Canvas_Height
         x2, y2 = ((j+1)/9)*Canvas_Width, ((i+1)/9)*Canvas_Height
-        Sudoku_Canvas.create_rectangle(x1, y1, x2, y2, width=1, outline=Line_Color)
+        Sudoku_Canvas.create_rectangle(x1, y1, x2, y2, width=1, outline='gray')
 
 
 Sudoku_Dict = {}
