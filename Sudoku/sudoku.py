@@ -1,7 +1,6 @@
 ############# SUDOKU #############
-###          Crée par:         ###
-###  (RP)  Oliwier Szmyt       ###  
-###  (QC)   Azzi Aicha         ###  
+###        Oliwier Szmyt       ###  
+###         Azzi Aicha         ###  
 ###          Joey Zhan         ###
 ###         Sirmen Reka        ###
 ##################################
