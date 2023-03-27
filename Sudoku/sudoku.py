@@ -4,7 +4,7 @@
 ###          Joey Zhan         ###
 ###         Sirmen Reka        ###
 ##################################
-#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-Valeurs Definition=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 from tkinter import *
 import random
 import webbrowser
@@ -17,8 +17,8 @@ Canvas_Padding = 100
 Background_Color = "#CCCCCC"
 ThickLine_Color = "white"
 Line_Color = "gray"
-#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-###### Initialisation du tableau du jeu
+
+#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-Initialisation du tableau du jeu-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 root = Tk()
 root.title("SUDOKU")
@@ -51,11 +51,8 @@ for i in range(0, 9):
         x1, y1 = (j/9)*Canvas_Width, (i/9)*Canvas_Height
         x2, y2 = ((j+1)/9)*Canvas_Width, ((i+1)/9)*Canvas_Height
         Sudoku_Canvas.create_rectangle(x1, y1, x2, y2, width=1, outline=Line_Color)
-        #ajouter une zone de texte à chaque rectangle
-        #cell = Entry(Sudoku_Canvas, width=3, font=("Helvetica", 20))
-        #Sudoku_Canvas.create_window((x1+x2)//2, (y1+y2)//2, window=cell)
 
-#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
 Sudoku_Dict = {}
 # ---> Dictionnaire contenant les cellules de Sudoku en clés (de gauche à droite, de haut en bas)
 # ---> et les valeurs étant le nombre contenus dans ces cellules.
@@ -66,6 +63,8 @@ print(Sudoku_Dict)
 Sudoku_RigidNumbers = []
 # ---> Liste / tableau contenant les cases ( ex: 20,51,3 ) qui ne pourront pas être changés au milieu
 # ---> de la partie.
+
+#------------------------------------------------Difficultée---------------------------------------------------------
 
 def choose_difficulty_easy(facile):
     facile = random.choice(grille_facile)
@@ -136,6 +135,7 @@ grille_difficile5 = [[0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [
                      [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0],
                      [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0]]
 
+#----------------------------------------------Entrer valeur---------------------------------------------------------
 
 #Fonction qui vérifie si la valeur est comprise entre 0 et 9 uniquement
 def verifie_case(widget_verification, valeur):
@@ -164,6 +164,8 @@ def click_case(event):
     submit_button = root.Button(input_window, text="Valider Valeur", command=lambda: verifie_case(widget, input_entry.get()))
     submit_button.pack()
 
+#---------------------------------------------------MENU-------------------------------------------------------------
+
 #Barre de menu
 barre_de_menus = Menu(root)
  #menus difficultée
@@ -183,5 +185,7 @@ barre_de_menus.add_cascade(label="Aide", menu=menu_aide)
 menu_aide.add_command(label="Regle du Sudoku",command=ouvrir_lien_regles)
 
 root.config(menu=barre_de_menus)
+
+#-------------------------------------FIN----------------------------------------------------------
 root.mainloop()
 #fin du code
