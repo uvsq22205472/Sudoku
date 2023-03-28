@@ -23,25 +23,25 @@ root.geometry("600x600")
 
 Sudoku_Canvas = Canvas(root,bg='#CCCCCC', width= Canvas_Width, height= Canvas_Height)
 Sudoku_Canvas.grid(column=Canvas_Padding,row=Canvas_Padding,columnspan=20,rowspan=20)
-
+#-------fenetre----
 def fenetre_input_valeur(event):
     # création d'une nouvelle fenêtre
-    entry_window = Toplevel(root)
-    entry_window.title("Champs de saisie (valeur entre 1 et 9): ")
-    entry_window.geometry("400x80")
+    input_window = Toplevel(root)
+    input_window.title("Champs de saisie (valeur entre 1 et 9): ")
+    input_window.geometry("400x80")
 
     # création du champ de saisie dans la nouvelle fenêtre
-    entry = Entry(entry_window)
-    entry.pack(pady=20)
+    entry = Entry(input_window)
+    entry.pack(pady=10)
 
     # définition de la fonction pour récupérer la valeur saisie et la placer dans la case du sudoku
-    def set_value():
+    def placer_valeur():
         value = entry.get()
         Sudoku_Canvas.itemconfig(Sudoku_Canvas.find_withtag(CURRENT), text=value)
-        entry_window.destroy()
+        input_window.destroy()
 
     # création d'un bouton pour valider la saisie et placer la valeur dans la case du sudoku
-    button = Button(entry_window, text="Valider", command=set_value)
+    button = Button(input_window, text="Valider", command=placer_valeur)
     button.pack()
 
 # Fonction pour définir la valeur d'une case de la grille de Sudoku
@@ -57,32 +57,22 @@ def verification_valeur(widget_verification, valeur):
         widget_verification.config(bg="red")
         label = Tk.Label(widget_verification, text="Erreur")
         label.pack()
-
-#boucle for pour dessiner les lignes et les colonnes de la grille
-for i in range(10):
-    if i % 3 == 0:
-        width = 2
-    else:
-        width = 1
-    # ligne verticale
-    Sudoku_Canvas.create_line((i/9)*Canvas_Width, 0, (i/9)*Canvas_Width, Canvas_Height, width=width, fill="gray")
-    # ligne horizontale
-    Sudoku_Canvas.create_line(0, (i/9)*Canvas_Height, Canvas_Width, (i/9)*Canvas_Height, width=width, fill="gray")
+#------dessin-----
+#boucle for pour dessiner les rectangles
+for i in range(0, 9):
+    for j in range(0, 9):
+        x1, y1 = (j/9)*Canvas_Width, (i/9)*Canvas_Height
+        x2, y2 = ((j+1)/9)*Canvas_Width, ((i+1)/9)*Canvas_Height
+        Rectangle = Sudoku_Canvas.create_rectangle(x1, y1, x2, y2, width=1, outline='gray',fill="gray90")
+        Sudoku_Canvas.tag_bind(Rectangle, '<Button-1>', fenetre_input_valeur)
 
 #boucle for pour dessiner les regions
 for i in range(0, 9, 3):
     for j in range(0, 9, 3):
         x1, y1 = (j/9)*Canvas_Width, (i/9)*Canvas_Height
         x2, y2 = ((j+3)/9)*Canvas_Width, ((i+3)/9)*Canvas_Height
-        Sudoku_Canvas.create_rectangle(x1, y1, x2, y2, width=6,fill='gray80', outline="white")
-
-#boucle for pour dessiner les rectangles
-for i in range(0, 9):
-    for j in range(0, 9):
-        x1, y1 = (j/9)*Canvas_Width, (i/9)*Canvas_Height
-        x2, y2 = ((j+1)/9)*Canvas_Width, ((i+1)/9)*Canvas_Height
-        Rectangle = Sudoku_Canvas.create_rectangle(x1, y1, x2, y2, width=1, outline='gray')
-        Sudoku_Canvas.tag_bind(Rectangle, '<Button-1>', fenetre_input_valeur)
+        Sudoku_Canvas.create_rectangle(x1, y1, x2, y2, width=3)
+        Sudoku_Canvas.create_rectangle(x1+2, y1+2, x2-2, y2-2, width=4, outline="white")
 
 #Sudoku_Dict = {}
 # ---> Dictionnaire contenant les cellules de Sudoku en clés (de gauche à droite, de haut en bas)
