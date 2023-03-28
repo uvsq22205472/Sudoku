@@ -1,9 +1,9 @@
-############# SUDOKU #############
-###        Oliwier Szmyt       ###  
-###         Azzi Aicha         ###  
-###          Joey Zhan         ###
-###         Sirmen Reka        ###
-##################################
+                ############# SUDOKU #############
+                ###         Sirmen Reka        ###  
+                ###          Joey Zhan         ###  
+                ###          Azzi Aicha        ###
+                ###         Oliwier Szmyt      ###
+                ##################################
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-Valeurs Definition=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 from tkinter import *
 import random
@@ -27,7 +27,7 @@ Sudoku_Canvas.grid(column=Canvas_Padding,row=Canvas_Padding,columnspan=20,rowspa
 #----------------------------------------------Entrer valeur---------------------------------------------------------
 
 
-#Fonction qui permet de cliquer pour ensuite mettre un nombre de 1 à 9
+#Fonction qui permet de cliquer pour ensuite mettre un chiffre de 1 à 9
 def fenetre_input_valeur(event):
     # création d'une nouvelle fenêtre
     input_window = Toplevel(root)
@@ -45,7 +45,7 @@ def fenetre_input_valeur(event):
         input_window.destroy()
 
     # création d'un bouton pour valider la saisie et placer la valeur dans la case du sudoku
-    button = Button(input_window, text="Valider", command=placer_valeur)
+    button = Button(input_window, text="Valider Valeur", command=placer_valeur)
     button.pack()
 
 #Fonction qui vérifie si la valeur est comprise entre 1 et 9 uniquement
