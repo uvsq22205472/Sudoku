@@ -23,7 +23,11 @@ root.geometry("600x600")
 
 Sudoku_Canvas = Canvas(root,bg='#CCCCCC', width= Canvas_Width, height= Canvas_Height)
 Sudoku_Canvas.grid(column=Canvas_Padding,row=Canvas_Padding,columnspan=20,rowspan=20)
-#-------fenetre----
+
+#----------------------------------------------Entrer valeur---------------------------------------------------------
+
+
+#Fonction qui permet de cliquer pour ensuite mettre un nombre de 1 à 9
 def fenetre_input_valeur(event):
     # création d'une nouvelle fenêtre
     input_window = Toplevel(root)
@@ -44,20 +48,37 @@ def fenetre_input_valeur(event):
     button = Button(input_window, text="Valider", command=placer_valeur)
     button.pack()
 
-# Fonction pour définir la valeur d'une case de la grille de Sudoku
+#Fonction qui vérifie si la valeur est comprise entre 1 et 9 uniquement
 def verification_valeur(widget_verification, valeur):
     # Vérification que la valeur saisie est valide
     if valeur.isdigit() and int(valeur) in range(10):
     # Définition de la valeur de la case
         widget_verification.config(bg="grey")
-        label = Tk.Label(widget_verification, text=valeur)
+        label = root.Label(widget_verification, text=valeur)
         label.pack()
     else:
         # Affichage d'un message d'erreur si la valeur saisie est invalide
         widget_verification.config(bg="red")
-        label = Tk.Label(widget_verification, text="Erreur")
+        label = root.Label(widget_verification, text="Erreur")
         label.pack()
-#------dessin-----
+
+
+
+#Sudoku_Dict = {}
+# ---> Dictionnaire contenant les cellules de Sudoku en clés (de gauche à droite, de haut en bas)
+# ---> et les valeurs étant le nombre contenus dans ces cellules.
+#for CellNumber in range(1,82):
+#    Sudoku_Dict[("Cell_"+str(CellNumber))] = "X"
+#print(Sudoku_Dict)
+#
+#Sudoku_RigidNumbers = []
+# ---> Liste / tableau contenant les cases ( ex: 20,51,3 ) qui ne pourront pas être changés au milieu
+# ---> de la partie.
+
+
+#----------------------------------------------Dessin Graphique---------------------------------------------------------
+
+
 #boucle for pour dessiner les rectangles
 for i in range(0, 9):
     for j in range(0, 9):
@@ -74,18 +95,9 @@ for i in range(0, 9, 3):
         Sudoku_Canvas.create_rectangle(x1, y1, x2, y2, width=3)
         Sudoku_Canvas.create_rectangle(x1+2, y1+2, x2-2, y2-2, width=4, outline="white")
 
-#Sudoku_Dict = {}
-# ---> Dictionnaire contenant les cellules de Sudoku en clés (de gauche à droite, de haut en bas)
-# ---> et les valeurs étant le nombre contenus dans ces cellules.
-#for CellNumber in range(1,82):
-#    Sudoku_Dict[("Cell_"+str(CellNumber))] = "X"
-#print(Sudoku_Dict)
-#
-#Sudoku_RigidNumbers = []
-# ---> Liste / tableau contenant les cases ( ex: 20,51,3 ) qui ne pourront pas être changés au milieu
-# ---> de la partie.
 
 #------------------------------------------------Difficultée---------------------------------------------------------
+
 
 def choose_difficulty_easy(facile):
     facile = random.choice(grille_facile)
@@ -156,34 +168,6 @@ grille_difficile5 = [[0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [
                      [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0],
                      [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0]]
 
-#----------------------------------------------Entrer valeur---------------------------------------------------------
-
-#Fonction qui vérifie si la valeur est comprise entre 0 et 9 uniquement
-def verifie_case(widget_verification, valeur):
-    if valeur.isdigit() and int(valeur) in range(10):
-        # Définition de la valeur de la case
-        widget_verification.config(bg="grey")
-        label = root.Label(widget_verification, text=valeur)
-        label.pack()
-    else:
-        widget_verification.config(bg="red")
-        label = root.Label(widget_verification, text="Erreur")
-        label.pack()
-
-#Fonction qui permet de cliquer pour ensuite mettre un nombre de 0 à 9
-def click_case(event):
-    widget = event.widget
-    x = widget.grid_info()['row']
-    y = widget.grid_info()['column']
-
-    input_window = root.Toplevel()
-    input_window.title("Champs de saisie (valeur entre 0 et 9): ")
-    input_window.geometry("400x70")
-
-    input_entry = root.Entry(input_window, width=5)
-    input_entry.pack(pady=10)
-    submit_button = root.Button(input_window, text="Valider Valeur", command=lambda: verifie_case(widget, input_entry.get()))
-    submit_button.pack()
 
 #---------------------------------------------------MENU-------------------------------------------------------------
 
@@ -207,6 +191,6 @@ menu_aide.add_command(label="Regle du Sudoku",command=ouvrir_lien_regles)
 
 root.config(menu=barre_de_menus)
 
-#-------------------------------------FIN----------------------------------------------------------
+#------------------------------------------------------FIN------------------------------------------------------------
 root.mainloop()
 #fin du code
