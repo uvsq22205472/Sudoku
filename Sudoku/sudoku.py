@@ -13,7 +13,6 @@ global Canvas_Height
 global Canvas_Width
 Canvas_Width = 600
 Canvas_Height = 600
-Canvas_Padding = 100
 
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-Initialisation du tableau du jeu-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
@@ -22,46 +21,38 @@ root.title("SUDOKU")
 root.geometry("600x600")
 
 Sudoku_Canvas = Canvas(root,bg='#CCCCCC', width= Canvas_Width, height= Canvas_Height)
-Sudoku_Canvas.grid(column=Canvas_Padding,row=Canvas_Padding,columnspan=20,rowspan=20)
+Sudoku_Canvas.grid(column=0,row=0,columnspan=20,rowspan=20)
 
 #----------------------------------------------Entrer valeur---------------------------------------------------------
 
 
 #Fonction qui permet de cliquer pour ensuite mettre un chiffre de 1 à 9
 def fenetre_input_valeur(event):
-    # création d'une nouvelle fenêtre
+    global x1, y1
+    x1, y1 = Sudoku_Canvas.coords(CURRENT)[:2]
+    #Creation d'une nouvelle fenetre
     input_window = Toplevel(root)
     input_window.title("Champs de saisie (valeur entre 1 et 9): ")
     input_window.geometry("400x80")
 
-    # création du champ de saisie dans la nouvelle fenêtre
+    #creation du champ de saisi dans la nouvelle fenetre
     entry = Entry(input_window)
     entry.pack(pady=10)
 
-    # définition de la fonction pour récupérer la valeur saisie et la placer dans la case du sudoku
+    #definition de la fonction pour reuperer la valeur saisie et la placer dans la case du sudoku
     def placer_valeur():
-        value = entry.get()
-        Sudoku_Canvas.itemconfig(Sudoku_Canvas.find_withtag(CURRENT), text=value)
-        input_window.destroy()
-
-    # création d'un bouton pour valider la saisie et placer la valeur dans la case du sudoku
+        global x1, y1
+        value = int(entry.get())
+        if type(value) in [int] and 1<=value<=9: 
+        #pour placer le texte + au milieux de la case (1/18)
+            texte = Sudoku_Canvas.create_text(x1+(Canvas_Width/18), y1+(Canvas_Height/18), text=value, font=("Helvetica", 16))
+        #récupérer l'objet actuellement selectionné (balise CURRENT)
+            current_item = Sudoku_Canvas.find_withtag(CURRENT)
+            Sudoku_Canvas.itemconfig(current_item, text=texte)
+            input_window.destroy()
+    #creation d'un bouton pour valider la saisie et placer la valeur dans la case du sudoku
     button = Button(input_window, text="Valider Valeur", command=placer_valeur)
     button.pack()
-
-#Fonction qui vérifie si la valeur est comprise entre 1 et 9 uniquement
-def verification_valeur(widget_verification, valeur):
-    # Vérification que la valeur saisie est valide
-    if valeur.isdigit() and int(valeur) in range(10):
-    # Définition de la valeur de la case
-        widget_verification.config(bg="grey")
-        label = root.Label(widget_verification, text=valeur)
-        label.pack()
-    else:
-        # Affichage d'un message d'erreur si la valeur saisie est invalide
-        widget_verification.config(bg="red")
-        label = root.Label(widget_verification, text="Erreur")
-        label.pack()
-
 
 
 #Sudoku_Dict = {}
@@ -86,7 +77,7 @@ for i in range(0, 9):
         x2, y2 = ((j+1)/9)*Canvas_Width, ((i+1)/9)*Canvas_Height
         Rectangle = Sudoku_Canvas.create_rectangle(x1, y1, x2, y2, width=1, outline='gray',fill="gray90")
         Sudoku_Canvas.tag_bind(Rectangle, '<Button-1>', fenetre_input_valeur)
-
+        Sudoku_Canvas.grid(row=i, column=j)
 #boucle for pour dessiner les regions
 for i in range(0, 9, 3):
     for j in range(0, 9, 3):
