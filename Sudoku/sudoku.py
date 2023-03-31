@@ -66,64 +66,63 @@ def fenetre_input_valeur(event):
 # ---> Liste / tableau contenant les cases ( ex: 20,51,3 ) qui ne pourront pas être changés au milieu
 # ---> de la partie.
 
-
-#----------------------------------------------Dessin Graphique---------------------------------------------------------
-
-
-#boucle for pour dessiner les rectangles
-for i in range(0, 9):
-    for j in range(0, 9):
-        x1, y1 = (j/9)*Canvas_Width, (i/9)*Canvas_Height
-        x2, y2 = ((j+1)/9)*Canvas_Width, ((i+1)/9)*Canvas_Height
-        Rectangle = Sudoku_Canvas.create_rectangle(x1, y1, x2, y2, width=1, outline='gray',fill="gray90")
-        Sudoku_Canvas.tag_bind(Rectangle, '<Button-1>', fenetre_input_valeur)
-        Sudoku_Canvas.grid(row=i, column=j)
-#boucle for pour dessiner les regions
-for i in range(0, 9, 3):
-    for j in range(0, 9, 3):
-        x1, y1 = (j/9)*Canvas_Width, (i/9)*Canvas_Height
-        x2, y2 = ((j+3)/9)*Canvas_Width, ((i+3)/9)*Canvas_Height
-        Sudoku_Canvas.create_rectangle(x1, y1, x2, y2, width=3)
-        Sudoku_Canvas.create_rectangle(x1+2, y1+2, x2-2, y2-2, width=4, outline="white")
-
-
-#------------------------------------------------Difficultée---------------------------------------------------------
-
-
-
-#----------------------------------------------Dessin Graphique---------------------------------------------------------
-
-
-#boucle for pour dessiner les rectangles
-for i in range(0, 9):
-    for j in range(0, 9):
-        x1, y1 = (j/9)*Canvas_Width, (i/9)*Canvas_Height
-        x2, y2 = ((j+1)/9)*Canvas_Width, ((i+1)/9)*Canvas_Height
-        Rectangle = Sudoku_Canvas.create_rectangle(x1, y1, x2, y2, width=1, outline='gray',fill="gray90")
-        Sudoku_Canvas.tag_bind(Rectangle, '<Button-1>', fenetre_input_valeur)
-        Sudoku_Canvas.grid(row=i, column=j)
-#boucle for pour dessiner les regions
-for i in range(0, 9, 3):
-    for j in range(0, 9, 3):
-        x1, y1 = (j/9)*Canvas_Width, (i/9)*Canvas_Height
-        x2, y2 = ((j+3)/9)*Canvas_Width, ((i+3)/9)*Canvas_Height
-        Sudoku_Canvas.create_rectangle(x1, y1, x2, y2, width=3)
-        Sudoku_Canvas.create_rectangle(x1+2, y1+2, x2-2, y2-2, width=4, outline="white")
-
-
-#------------------------------------------------Difficultée---------------------------------------------------------
-
-
-ButtonText = str()
-for vertical in range(0,9):
-    horizontal = 0
-    for horizontal in range(0,9):
-        Sudoku_Button = Button(root,text=(str(horizontal+1)+","+str(vertical+1)), font=("helvetica", "12"), relief="groove")
-        Sudoku_Button.grid(column=vertical,row=horizontal)
-        Sudoku_Button["command"] = lambda Sudoku_Button = Sudoku_Button: click_case(Sudoku_Button)
-        # --- > https://stackoverflow.com/questions/10865116/tkinter-creating-buttons-in-for-loop-passing-command-arguments
-        # --- > Utilisation de la reponse de l'utilisateur "Joel" de StackOverflow.
+#ButtonText = str()
+#for vertical in range(0,9):
+#    horizontal = 0
+#    for horizontal in range(0,9):
+#        Sudoku_Button = Button(root,text=(str(horizontal+1)+","+str(vertical+1)), font=("helvetica", "12"), relief="groove")
+#        Sudoku_Button.grid(column=vertical,row=horizontal)
+#        Sudoku_Button["command"] = lambda Sudoku_Button = Sudoku_Button: click_case(Sudoku_Button)
+#        # --- > https://stackoverflow.com/questions/10865116/tkinter-creating-buttons-in-for-loop-passing-command-arguments
+#        # --- > Utilisation de la reponse de l'utilisateur "Joel" de StackOverflow.
     
+
+#----------------------------------------------Dessin Graphique---------------------------------------------------------
+
+
+#boucle for pour dessiner les rectangles
+for i in range(0, 9):
+    for j in range(0, 9):
+        x1, y1 = (j/9)*Canvas_Width, (i/9)*Canvas_Height
+        x2, y2 = ((j+1)/9)*Canvas_Width, ((i+1)/9)*Canvas_Height
+        Rectangle = Sudoku_Canvas.create_rectangle(x1, y1, x2, y2, width=1, outline='gray',fill="gray90")
+        Sudoku_Canvas.tag_bind(Rectangle, '<Button-1>', fenetre_input_valeur)
+        Sudoku_Canvas.grid(row=i, column=j)
+#boucle for pour dessiner les regions
+for i in range(0, 9, 3):
+    for j in range(0, 9, 3):
+        x1, y1 = (j/9)*Canvas_Width, (i/9)*Canvas_Height
+        x2, y2 = ((j+3)/9)*Canvas_Width, ((i+3)/9)*Canvas_Height
+        Sudoku_Canvas.create_rectangle(x1, y1, x2, y2, width=3)
+        Sudoku_Canvas.create_rectangle(x1+2, y1+2, x2-2, y2-2, width=4, outline="white")
+
+
+#------------------------------------------------Difficultée---------------------------------------------------------
+
+
+
+#----------------------------------------------Dessin Graphique---------------------------------------------------------
+
+
+#boucle for pour dessiner les rectangles
+for i in range(0, 9):
+    for j in range(0, 9):
+        x1, y1 = (j/9)*Canvas_Width, (i/9)*Canvas_Height
+        x2, y2 = ((j+1)/9)*Canvas_Width, ((i+1)/9)*Canvas_Height
+        Rectangle = Sudoku_Canvas.create_rectangle(x1, y1, x2, y2, width=1, outline='gray',fill="gray90")
+        Sudoku_Canvas.tag_bind(Rectangle, '<Button-1>', fenetre_input_valeur)
+        Sudoku_Canvas.grid(row=i, column=j)
+#boucle for pour dessiner les regions
+for i in range(0, 9, 3):
+    for j in range(0, 9, 3):
+        x1, y1 = (j/9)*Canvas_Width, (i/9)*Canvas_Height
+        x2, y2 = ((j+3)/9)*Canvas_Width, ((i+3)/9)*Canvas_Height
+        Sudoku_Canvas.create_rectangle(x1, y1, x2, y2, width=3)
+        Sudoku_Canvas.create_rectangle(x1+2, y1+2, x2-2, y2-2, width=4, outline="white")
+
+
+#------------------------------------------------Difficultée---------------------------------------------------------
+
 
 def choose_difficulty_easy(facile):
     facile = random.choice(grille_facile)
