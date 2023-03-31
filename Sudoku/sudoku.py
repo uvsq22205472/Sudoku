@@ -1,11 +1,10 @@
-############# SUDOKU #############
-###          Crée par:         ###
-###  (RP)  Oliwier Szmyt       ###  
-###  (QC)   Azzi Aicha         ###  
-###          Joey Zhan         ###
-###         Sirmen Reka        ###
-##################################
-#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+                ############# SUDOKU #############
+                ###         Sirmen Reka        ###  
+                ###          Joey Zhan         ###  
+                ###          Azzi Aicha        ###
+                ###         Oliwier Szmyt      ###
+                ##################################
+#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-Valeurs Definition=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 from tkinter import *
 import random
 import webbrowser
@@ -14,63 +13,106 @@ global Canvas_Height
 global Canvas_Width
 Canvas_Width = 600
 Canvas_Height = 600
-Canvas_Padding = 100
-Background_Color = "#CCCCCC"
-ThickLine_Color = "white"
-Line_Color = "gray"
-#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-###### Initialisation du tableau du jeu
+
+#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-Initialisation du tableau du jeu-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
 root = Tk()
 root.title("SUDOKU")
-root.geometry("800x600")
-# => Fonction pour changer longeur/largeur de la fênetre trouvé après recherches sur
-####### https://www.tutorialspoint.com/how-to-place-an-image-into-a-frame-in-tkinter
+root.geometry("600x600")
 
-# Lignes
-Sudoku_Canvas = Canvas(root,bg=Background_Color, width= Canvas_Width, height= Canvas_Height)
-Sudoku_Canvas.grid(column=Canvas_Padding,row=Canvas_Padding,columnspan=20,rowspan=20)
+Sudoku_Canvas = Canvas(root,bg='#CCCCCC', width= Canvas_Width, height= Canvas_Height)
+Sudoku_Canvas.grid(column=0,row=0,columnspan=20,rowspan=20)
 
+#----------------------------------------------Entrer valeur---------------------------------------------------------
 
 
-# le code en bas fonctionne mais c'est pas joli, il faudra faire une triple boucle for 
-for i in range(9):
-    Sudoku_Canvas.create_line((200/3)*i,0,(200/3)*i,600,width=1, fill=Line_Color)
-for i in range(9):
-    Sudoku_Canvas.create_line(0,(200/3)*i,600,(200/3)*i,width=1,fill=Line_Color)
+#Fonction qui permet de cliquer pour ensuite mettre un chiffre de 1 à 9
+def fenetre_input_valeur(event):
+    global x1, y1
+    x1, y1 = Sudoku_Canvas.coords(CURRENT)[:2]
+    #Creation d'une nouvelle fenetre
+    input_window = Toplevel(root)
+    input_window.title("Champs de saisie (valeur entre 1 et 9): ")
+    input_window.geometry("400x80")
 
-#Sudoku_Canvas.create_rectangle((0,0),(200,200),width=2,outline=ThickLine_Color)
-#Sudoku_Canvas.create_rectangle((0,200),(200,400),width=2,outline=ThickLine_Color)
-#Sudoku_Canvas.create_rectangle((0,400),(200,600),width=2,outline=ThickLine_Color)
+    #creation du champ de saisi dans la nouvelle fenetre
+    entry = Entry(input_window)
+    entry.pack(pady=10)
 
-#Sudoku_Canvas.create_rectangle((200,0),(400,200),width=2,outline=ThickLine_Color)
-#Sudoku_Canvas.create_rectangle((200,200),(400,400),width=2,outline=ThickLine_Color)
-#Sudoku_Canvas.create_rectangle((200,400),(400,600),width=2,outline=ThickLine_Color)
-
-#Sudoku_Canvas.create_rectangle((400,0),(600,200),width=2,outline=ThickLine_Color)
-#Sudoku_Canvas.create_rectangle((400,200),(600,400),width=2,outline=ThickLine_Color)
-#Sudoku_Canvas.create_rectangle((400,400),(600,600),width=2,outline=ThickLine_Color)
-#
-#Sudoku_Canvas.create_line((200/3),0,(200/3),600,width=1,fill=Line_Color)
-#for Column in range(0,10):
-    #for Row in range(0,10):
-        #Sudoku_Canvas.create_rectangle((0+((Column-1)*(200/3)),(0+((Row-1)*(200/3))),(200+((Column-1)*(200/3)),(0+((Row-1)*(200/3))))),width=1,outline=Line_Color)
-
-
-
-
+    #definition de la fonction pour reuperer la valeur saisie et la placer dans la case du sudoku
+    def placer_valeur():
+        global x1, y1
+        value = int(entry.get())
+        if type(value) in [int] and 1<=value<=9: 
+        #pour placer le texte + au milieux de la case (1/18)
+            texte = Sudoku_Canvas.create_text(x1+(Canvas_Width/18), y1+(Canvas_Height/18), text=value, font=("Helvetica", 16))
+        #récupérer l'objet actuellement selectionné (balise CURRENT)
+            current_item = Sudoku_Canvas.find_withtag(CURRENT)
+            Sudoku_Canvas.itemconfig(current_item, text=texte)
+            input_window.destroy()
+    #creation d'un bouton pour valider la saisie et placer la valeur dans la case du sudoku
+    button = Button(input_window, text="Valider Valeur", command=placer_valeur)
+    button.pack()
 
 
-#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-Sudoku_Dict = {}
+#Sudoku_Dict = {}
 # ---> Dictionnaire contenant les cellules de Sudoku en clés (de gauche à droite, de haut en bas)
 # ---> et les valeurs étant le nombre contenus dans ces cellules.
-for CellNumber in range(1,82):
-    Sudoku_Dict[("Cell_"+str(CellNumber))] = "X"
-print(Sudoku_Dict)
+#for CellNumber in range(1,82):
+#    Sudoku_Dict[("Cell_"+str(CellNumber))] = "X"
+#print(Sudoku_Dict)
 #
-Sudoku_RigidNumbers = []
+#Sudoku_RigidNumbers = []
 # ---> Liste / tableau contenant les cases ( ex: 20,51,3 ) qui ne pourront pas être changés au milieu
 # ---> de la partie.
+
+
+#----------------------------------------------Dessin Graphique---------------------------------------------------------
+
+
+#boucle for pour dessiner les rectangles
+for i in range(0, 9):
+    for j in range(0, 9):
+        x1, y1 = (j/9)*Canvas_Width, (i/9)*Canvas_Height
+        x2, y2 = ((j+1)/9)*Canvas_Width, ((i+1)/9)*Canvas_Height
+        Rectangle = Sudoku_Canvas.create_rectangle(x1, y1, x2, y2, width=1, outline='gray',fill="gray90")
+        Sudoku_Canvas.tag_bind(Rectangle, '<Button-1>', fenetre_input_valeur)
+        Sudoku_Canvas.grid(row=i, column=j)
+#boucle for pour dessiner les regions
+for i in range(0, 9, 3):
+    for j in range(0, 9, 3):
+        x1, y1 = (j/9)*Canvas_Width, (i/9)*Canvas_Height
+        x2, y2 = ((j+3)/9)*Canvas_Width, ((i+3)/9)*Canvas_Height
+        Sudoku_Canvas.create_rectangle(x1, y1, x2, y2, width=3)
+        Sudoku_Canvas.create_rectangle(x1+2, y1+2, x2-2, y2-2, width=4, outline="white")
+
+
+#------------------------------------------------Difficultée---------------------------------------------------------
+
+
+
+#----------------------------------------------Dessin Graphique---------------------------------------------------------
+
+
+#boucle for pour dessiner les rectangles
+for i in range(0, 9):
+    for j in range(0, 9):
+        x1, y1 = (j/9)*Canvas_Width, (i/9)*Canvas_Height
+        x2, y2 = ((j+1)/9)*Canvas_Width, ((i+1)/9)*Canvas_Height
+        Rectangle = Sudoku_Canvas.create_rectangle(x1, y1, x2, y2, width=1, outline='gray',fill="gray90")
+        Sudoku_Canvas.tag_bind(Rectangle, '<Button-1>', fenetre_input_valeur)
+        Sudoku_Canvas.grid(row=i, column=j)
+#boucle for pour dessiner les regions
+for i in range(0, 9, 3):
+    for j in range(0, 9, 3):
+        x1, y1 = (j/9)*Canvas_Width, (i/9)*Canvas_Height
+        x2, y2 = ((j+3)/9)*Canvas_Width, ((i+3)/9)*Canvas_Height
+        Sudoku_Canvas.create_rectangle(x1, y1, x2, y2, width=3)
+        Sudoku_Canvas.create_rectangle(x1+2, y1+2, x2-2, y2-2, width=4, outline="white")
+
+
+#------------------------------------------------Difficultée---------------------------------------------------------
+
 
 ButtonText = str()
 for vertical in range(0,9):
@@ -153,32 +195,7 @@ grille_difficile5 = [[0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [
                      [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0]]
 
 
-#Fonction qui vérifie si la valeur est comprise entre 0 et 9 uniquement
-def verifie_case(widget_verification, valeur):
-    if valeur.isdigit() and int(valeur) in range(10):
-        # Définition de la valeur de la case
-        widget_verification.config(bg="grey")
-        label = root.Label(widget_verification, text=valeur)
-        label.pack()
-    else:
-        widget_verification.config(bg="red")
-        label = root.Label(widget_verification, text="Erreur")
-        label.pack()
-
-#Fonction qui permet de cliquer pour ensuite mettre un nombre de 0 à 9
-def click_case(event):
-    widget = event.widget
-    x = widget.grid_info()['row']
-    y = widget.grid_info()['column']
-
-    input_window = root.Toplevel()
-    input_window.title("Champs de saisie (valeur entre 0 et 9): ")
-    input_window.geometry("400x70")
-
-    input_entry = root.Entry(input_window, width=5)
-    input_entry.pack(pady=10)
-    submit_button = root.Button(input_window, text="Valider Valeur", command=lambda: verifie_case(widget, input_entry.get()))
-    submit_button.pack()
+#---------------------------------------------------MENU-------------------------------------------------------------
 
 #Barre de menu
 barre_de_menus = Menu(root)
@@ -200,5 +217,6 @@ menu_aide.add_command(label="Regle du Sudoku",command=ouvrir_lien_regles)
 
 root.config(menu=barre_de_menus)
 
+#------------------------------------------------------FIN------------------------------------------------------------
 root.mainloop()
 #fin du code
