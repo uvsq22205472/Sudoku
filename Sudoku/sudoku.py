@@ -38,17 +38,17 @@ for i in range(9):
 for i in range(9):
     Sudoku_Canvas.create_line(0,(200/3)*i,600,(200/3)*i,width=1,fill=Line_Color)
 
-Sudoku_Canvas.create_rectangle((0,0),(200,200),width=2,outline=ThickLine_Color)
-Sudoku_Canvas.create_rectangle((0,200),(200,400),width=2,outline=ThickLine_Color)
-Sudoku_Canvas.create_rectangle((0,400),(200,600),width=2,outline=ThickLine_Color)
+#Sudoku_Canvas.create_rectangle((0,0),(200,200),width=2,outline=ThickLine_Color)
+#Sudoku_Canvas.create_rectangle((0,200),(200,400),width=2,outline=ThickLine_Color)
+#Sudoku_Canvas.create_rectangle((0,400),(200,600),width=2,outline=ThickLine_Color)
 
-Sudoku_Canvas.create_rectangle((200,0),(400,200),width=2,outline=ThickLine_Color)
-Sudoku_Canvas.create_rectangle((200,200),(400,400),width=2,outline=ThickLine_Color)
-Sudoku_Canvas.create_rectangle((200,400),(400,600),width=2,outline=ThickLine_Color)
+#Sudoku_Canvas.create_rectangle((200,0),(400,200),width=2,outline=ThickLine_Color)
+#Sudoku_Canvas.create_rectangle((200,200),(400,400),width=2,outline=ThickLine_Color)
+#Sudoku_Canvas.create_rectangle((200,400),(400,600),width=2,outline=ThickLine_Color)
 
-Sudoku_Canvas.create_rectangle((400,0),(600,200),width=2,outline=ThickLine_Color)
-Sudoku_Canvas.create_rectangle((400,200),(600,400),width=2,outline=ThickLine_Color)
-Sudoku_Canvas.create_rectangle((400,400),(600,600),width=2,outline=ThickLine_Color)
+#Sudoku_Canvas.create_rectangle((400,0),(600,200),width=2,outline=ThickLine_Color)
+#Sudoku_Canvas.create_rectangle((400,200),(600,400),width=2,outline=ThickLine_Color)
+#Sudoku_Canvas.create_rectangle((400,400),(600,600),width=2,outline=ThickLine_Color)
 #
 #Sudoku_Canvas.create_line((200/3),0,(200/3),600,width=1,fill=Line_Color)
 #for Column in range(0,10):
@@ -71,6 +71,17 @@ print(Sudoku_Dict)
 Sudoku_RigidNumbers = []
 # ---> Liste / tableau contenant les cases ( ex: 20,51,3 ) qui ne pourront pas être changés au milieu
 # ---> de la partie.
+
+ButtonText = str()
+for vertical in range(0,9):
+    horizontal = 0
+    for horizontal in range(0,9):
+        Sudoku_Button = Button(root,text=(str(horizontal+1)+","+str(vertical+1)), font=("helvetica", "12"), relief="groove")
+        Sudoku_Button.grid(column=vertical,row=horizontal)
+        Sudoku_Button["command"] = lambda Sudoku_Button = Sudoku_Button: click_case(Sudoku_Button)
+        # --- > https://stackoverflow.com/questions/10865116/tkinter-creating-buttons-in-for-loop-passing-command-arguments
+        # --- > Utilisation de la reponse de l'utilisateur "Joel" de StackOverflow.
+    
 
 def choose_difficulty_easy(facile):
     facile = random.choice(grille_facile)
@@ -141,8 +152,6 @@ grille_difficile5 = [[0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [
                      [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0],
                      [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0]]
 
-Region1 = Button(root,text=Sudoku_Dict["Cell_1"],)
-Region1.grid(row=1,column=1)
 
 #Fonction qui vérifie si la valeur est comprise entre 0 et 9 uniquement
 def verifie_case(widget_verification, valeur):
