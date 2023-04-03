@@ -23,38 +23,44 @@ root.geometry("600x600")
 
 Sudoku_Canvas = Canvas(root,bg='#CCCCCC', width= Canvas_Width, height= Canvas_Height)
 Sudoku_Canvas.grid(column=0,row=0,columnspan=20,rowspan=20)
+Sudoku_liste_valeurs = [[0 for j in range(9)] for i in range(9)]
+
 
 #----------------------------------------------Entrer valeur---------------------------------------------------------
 
 
+
 #Fonction qui permet de cliquer pour ensuite mettre un chiffre de 1 à 9
 def fenetre_input_valeur(event):
-    global x1, y1
-    x1, y1 = Sudoku_Canvas.coords(CURRENT)[:2]
-    #Creation d'une nouvelle fenetre
+    #Position du clic
+    x, y = event.x, event.y
+    #Calculer la position de la case par rapport au clic
+    col = int(x // (Canvas_Width / 9))
+    row = int(y // (Canvas_Height / 9))
+    #Fenetre
     input_window = Toplevel(root)
     input_window.title("Champs de saisie (valeur entre 1 et 9): ")
     input_window.geometry("400x80")
 
-    #creation du champ de saisi dans la nouvelle fenetre
+    #Champs de saisie
     entry = Entry(input_window)
     entry.pack(pady=10)
 
-    #definition de la fonction pour reuperer la valeur saisie et la placer dans la case du sudoku
+    #Placer dans la case du sudoku
     def placer_valeur():
-        global x1, y1
         value = entry.get()
         if value.isnumeric() == True and 1<=int(value)<=9:
             value = int(value)
+            Sudoku_liste_valeurs[row][col] = value
             #pour placer le texte + au milieux de la case (1/18)
-            texte = Sudoku_Canvas.create_text(x1+(Canvas_Width/18), y1+(Canvas_Height/18), text=value, font=("Helvetica", 16))
-            #récupérer l'objet actuellement selectionné (balise CURRENT)
+            x1 = (col/9)*Canvas_Width + (Canvas_Width/18)
+            y1 = (row/9)*Canvas_Height + (Canvas_Height/18)
+            texte = Sudoku_Canvas.create_text(x1, y1, text=value, font=("Helvetica", 16))
             current_item = Sudoku_Canvas.find_withtag(CURRENT)
             Sudoku_Canvas.itemconfig(current_item, text=texte)
         else:
             messagebox.showerror(title="Erreur",message="Veuillez à entrer un nombre compris entre 1 et 9.")
         input_window.destroy()
-
 
     #creation d'un bouton pour valider la saisie et placer la valeur dans la case du sudoku
     button = Button(input_window, text="Valider Valeur", command=placer_valeur)
@@ -82,30 +88,6 @@ def fenetre_input_valeur(event):
 #        # --- > https://stackoverflow.com/questions/10865116/tkinter-creating-buttons-in-for-loop-passing-command-arguments
 #        # --- > Utilisation de la reponse de l'utilisateur "Joel" de StackOverflow.
     
-
-#----------------------------------------------Dessin Graphique---------------------------------------------------------
-
-
-#boucle for pour dessiner les rectangles
-for i in range(0, 9):
-    for j in range(0, 9):
-        x1, y1 = (j/9)*Canvas_Width, (i/9)*Canvas_Height
-        x2, y2 = ((j+1)/9)*Canvas_Width, ((i+1)/9)*Canvas_Height
-        Rectangle = Sudoku_Canvas.create_rectangle(x1, y1, x2, y2, width=1, outline='gray',fill="gray90")
-        Sudoku_Canvas.tag_bind(Rectangle, '<Button-1>', fenetre_input_valeur)
-        Sudoku_Canvas.grid(row=i, column=j)
-#boucle for pour dessiner les regions
-for i in range(0, 9, 3):
-    for j in range(0, 9, 3):
-        x1, y1 = (j/9)*Canvas_Width, (i/9)*Canvas_Height
-        x2, y2 = ((j+3)/9)*Canvas_Width, ((i+3)/9)*Canvas_Height
-        Sudoku_Canvas.create_rectangle(x1, y1, x2, y2, width=3)
-        Sudoku_Canvas.create_rectangle(x1+2, y1+2, x2-2, y2-2, width=4, outline="white")
-
-
-#------------------------------------------------Difficultée---------------------------------------------------------
-
-
 
 #----------------------------------------------Dessin Graphique---------------------------------------------------------
 
