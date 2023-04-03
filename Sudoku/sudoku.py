@@ -7,6 +7,7 @@
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-Valeurs Definition=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 from tkinter import *
 from tkinter import messagebox
+from random import randint
 import random
 import webbrowser
 
@@ -31,6 +32,10 @@ Sudoku_liste_valeurs = [[0 for j in range(9)] for i in range(9)]
 
 
 #Fonction qui permet de cliquer pour ensuite mettre un chiffre de 1 à 9
+def on_click(event):
+    return None
+
+
 def fenetre_input_valeur(event):
     #Position du clic
     x, y = event.x, event.y
@@ -65,6 +70,26 @@ def fenetre_input_valeur(event):
     #creation d'un bouton pour valider la saisie et placer la valeur dans la case du sudoku
     button = Button(input_window, text="Valider Valeur", command=placer_valeur)
     button.pack()
+
+#----------------------------------------------Cellules et géneration aléatoire de tableau ---------------------------------------------------------
+# Generation du tableau completement aleatoire
+def RandomBoard(board):
+    RandomCellsRemaining = randint(10,40)
+    return None
+
+
+
+Sudoku_Board = [[0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0]]
+# Chaque sous-liste est une région, notée de cette façon.
+# 1  2  3
+# 4  5  6
+# 7  8  9
+Sudoku_RigidCells = []
+
+
+
 
 
 #Sudoku_Dict = {}
