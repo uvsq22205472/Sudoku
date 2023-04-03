@@ -6,6 +6,7 @@
                 ##################################
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-Valeurs Definition=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 from tkinter import *
+from tkinter import messagebox
 import random
 import webbrowser
 
@@ -42,14 +43,19 @@ def fenetre_input_valeur(event):
     #definition de la fonction pour reuperer la valeur saisie et la placer dans la case du sudoku
     def placer_valeur():
         global x1, y1
-        value = int(entry.get())
-        if type(value) in [int] and 1<=value<=9: 
-        #pour placer le texte + au milieux de la case (1/18)
+        value = entry.get()
+        if value.isnumeric() == True and 1<=int(value)<=9:
+            value = int(value)
+            #pour placer le texte + au milieux de la case (1/18)
             texte = Sudoku_Canvas.create_text(x1+(Canvas_Width/18), y1+(Canvas_Height/18), text=value, font=("Helvetica", 16))
-        #récupérer l'objet actuellement selectionné (balise CURRENT)
+            #récupérer l'objet actuellement selectionné (balise CURRENT)
             current_item = Sudoku_Canvas.find_withtag(CURRENT)
             Sudoku_Canvas.itemconfig(current_item, text=texte)
-            input_window.destroy()
+        else:
+            messagebox.showerror(title="Erreur",message="Veuillez à entrer un nombre compris entre 1 et 9.")
+        input_window.destroy()
+
+
     #creation d'un bouton pour valider la saisie et placer la valeur dans la case du sudoku
     button = Button(input_window, text="Valider Valeur", command=placer_valeur)
     button.pack()
