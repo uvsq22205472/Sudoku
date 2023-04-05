@@ -20,7 +20,7 @@ Canvas_Height = 600
 
 root = Tk()
 root.title("SUDOKU")
-root.geometry("600x600")
+root.geometry("750x600")
 
 Sudoku_Canvas = Canvas(root,bg='#CCCCCC', width= Canvas_Width, height= Canvas_Height)
 Sudoku_Canvas.grid(column=0,row=0,columnspan=20,rowspan=20)
@@ -47,10 +47,10 @@ def fenetre_input_valeur(event):
     input_window.title("Champs de saisie")
     # --> https://datatofish.com/entry-box-tkinter/
     # --> https://stackoverflow.com/questions/42211865/how-to-add-text-to-a-toplevel-window
-    InputWindowText = "\nVeuillez à entrer une valeur entre\n1 et 9 et de Valider\nou cliquer sur Effacer pour effacer la case."
+    InputWindowText = "\nVeuillez entrer une valeur comprise entre 1 et 9 puis Valider\nou cliquer sur Effacer pour effacer la valeur dans la case."
     Label(input_window, text=InputWindowText).pack()
     # -- -- --
-    input_window.geometry("250x160")
+    input_window.geometry("330x160")
 
     #Champs de saisie
     entry = Entry(input_window)
@@ -129,8 +129,38 @@ Sudoku_RigidCells = []
 #        Sudoku_Button["command"] = lambda Sudoku_Button = Sudoku_Button: click_case(Sudoku_Button)
 #        # --- > https://stackoverflow.com/questions/10865116/tkinter-creating-buttons-in-for-loop-passing-command-arguments
 #        # --- > Utilisation de la reponse de l'utilisateur "Joel" de StackOverflow.
-    
 
+#----------------------------------------------Timer-----------------------------------------------------------------
+
+timer_en_marche = False
+minutes = 0
+secondes = 0
+'''Modifie ici pour que ca commence quand tu met le module aleatoire'''
+
+def demarrer_timer():
+    global timer_en_marche
+    if not timer_en_marche:
+        timer()
+        timer_en_marche = True
+
+def timer():
+    global minutes, secondes
+    secondes = secondes + 1
+    ecriture_minutes = f'{minutes}' if minutes > 9 else f'0{minutes}'
+    ecriture_secondes = f'{secondes}' if secondes > 9 else f'0{secondes}'
+    timer_ecriture.config(text=ecriture_minutes + ':' + ecriture_secondes)
+    if secondes == 60:
+        minutes = minutes + 1
+        secondes = 0
+    global maj_timer
+    maj_timer = timer_ecriture.after(1000, timer)
+
+
+timer_ecriture = Label(font=('Helvetica', 30), text='00:00')
+timer_ecriture.place(x=620, y=10)
+
+start_button = Button(text='Débuter', height=1, width=8, font=('Helvetica', 22), command=demarrer_timer)
+start_button.place(x=605, y=80)
 #----------------------------------------------Dessin Graphique---------------------------------------------------------
 
 
