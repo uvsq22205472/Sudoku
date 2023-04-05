@@ -44,8 +44,13 @@ def fenetre_input_valeur(event):
     row = int(y // (Canvas_Height / 9))
     #Fenetre
     input_window = Toplevel(root)
-    input_window.title("Champs de saisie (valeur entre 1 et 9): ")
-    input_window.geometry("400x80")
+    input_window.title("Champs de saisie")
+    # --> https://datatofish.com/entry-box-tkinter/
+    # --> https://stackoverflow.com/questions/42211865/how-to-add-text-to-a-toplevel-window
+    InputWindowText = "\nVeuillez à entrer une valeur entre\n1 et 9 et de Valider\nou cliquer sur Effacer pour effacer la case."
+    Label(input_window, text=InputWindowText).pack()
+    # -- -- --
+    input_window.geometry("250x160")
 
     #Champs de saisie
     entry = Entry(input_window)
@@ -53,6 +58,10 @@ def fenetre_input_valeur(event):
 
     #Placer dans la case du sudoku
     def placer_valeur():
+        """ docstring
+
+        """
+        CurrentCellTag = "Cell"+str(row)+";"+str(col)
         value = entry.get()
         if value.isnumeric() == True and 1<=int(value)<=9:
             value = int(value)
@@ -60,33 +69,41 @@ def fenetre_input_valeur(event):
             #pour placer le texte + au milieux de la case (1/18)
             x1 = (col/9)*Canvas_Width + (Canvas_Width/18)
             y1 = (row/9)*Canvas_Height + (Canvas_Height/18)
-            texte = Sudoku_Canvas.create_text(x1, y1, text=value, font=("Helvetica", 16))
             current_item = Sudoku_Canvas.find_withtag(CURRENT)
+            texte = Sudoku_Canvas.delete(CurrentCellTag)
+            texte = Sudoku_Canvas.create_text(x1, y1, text=value, font=("Helvetica", 16),tag=CurrentCellTag)
             Sudoku_Canvas.itemconfig(current_item, text=texte)
+            print(Sudoku_liste_valeurs)
+        elif value == "":
+            erase_value()
+            # Si rien est entre dans, alors cela suprime la valeur dans la case et met 0 ou "rien" dans le tableau.
         else:
             messagebox.showerror(title="Erreur",message="Veuillez à entrer un nombre compris entre 1 et 9.")
         input_window.destroy()
-
+    def erase_value():
+        CurrentCellTag = "Cell"+str(row)+";"+str(col)
+        Sudoku_liste_valeurs[row][col]= 0
+        texte = Sudoku_Canvas.delete(CurrentCellTag)
+        input_window.destroy()
+        return None
     #creation d'un bouton pour valider la saisie et placer la valeur dans la case du sudoku
-    button = Button(input_window, text="Valider Valeur", command=placer_valeur)
+    button = Button(input_window, text="Valider", command=placer_valeur)
     button.pack()
 
-#----------------------------------------------Cellules et géneration aléatoire de tableau ---------------------------------------------------------
+    erase_button = Button(input_window,text="Effacer", command=erase_value)
+    erase_button.pack()
+
+#----------------------------------------------Géneration aléatoire de tableau ---------------------------------------------------------
 # Generation du tableau completement aleatoire
 def RandomBoard(board):
-    RandomCellsRemaining = randint(10,40)
-    return None
+    RandomCellsRemaining = randint(25,35)
 
-
-
-Sudoku_Board = [[0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0]]
 # Chaque sous-liste est une région, notée de cette façon.
 # 1  2  3
 # 4  5  6
 # 7  8  9
 Sudoku_RigidCells = []
+# Liste des *cases* ( de 1 a 81 ) qui ne peuvent pas etres modifiees
 
 
 
