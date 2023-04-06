@@ -1,9 +1,9 @@
                 ############# SUDOKU #############
-                ###         Sirmen Reka        ###  
-                ###          Joey Zhan         ###  
+                ###         Sirmen Reka        ###
+                ###          Joey Zhan         ###
                 ###          Azzi Aicha        ###
                 ###         Oliwier Szmyt      ###
-                ##################################
+                ################################## 
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-Valeurs Definition=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 from tkinter import *
 from tkinter import messagebox
@@ -62,7 +62,7 @@ def fenetre_input_valeur(event):
         """ docstring
 
         """
-        CurrentCellTag = "Cell"+str(row)+";"+str(col)
+        CurrentCellTag = "Cellule"+str(row)+";"+str(col)
         value = entry.get()
         if value.isnumeric() == True and 1<=int(value)<=9:
             value = int(value)
@@ -82,7 +82,7 @@ def fenetre_input_valeur(event):
             messagebox.showerror(title="Erreur",message="Veuillez à entrer un nombre compris entre 1 et 9.")
         input_window.destroy()
     def erase_value():
-        CurrentCellTag = "Cell"+str(row)+";"+str(col)
+        CurrentCellTag = "Cellule"+str(row)+";"+str(col)
         Sudoku_liste_valeurs[row][col]= 0
         texte = Sudoku_Canvas.delete(CurrentCellTag)
         input_window.destroy()
@@ -96,14 +96,65 @@ def fenetre_input_valeur(event):
 
 #----------------------------------------------Géneration aléatoire de tableau ---------------------------------------------------------
 # Generation du tableau completement aleatoire
-def RandomBoard(board):
-    RandomCellsRemaining = randint(25,35)
+def EasyAlgorithm(board : list):
+    # Verif Ligne
+    for Line in range(0,10):
+        TakenIndexListOnTheLine = []
+        for i in range(4):
+            randomIndex = randint[1,9]
+            TakenIndexListOnTheLine[Line][randomIndex] = randint(9)
+def FillBlanks(board : list):
+    return None
+def VerifyBoard(board: list):
+    return None
+def RandomBoard(board : list ,difficulty : str):
+    ## --> https://www.sudokulovers.com/what-makes-Sudoku-easy-medium-or-hard
+    ## Easy Sudoku puzzles come with at least three in each row, column, box, and number, along with 30 givens.
+    ## Hard Sudokus might come in the upper 20s, along with entire boxes or numbers unaccounted for.
+    ##
+    ## Definition des nombres des cases à remplir selon la difficulté 
+    ##
+    if difficulty == ("easy" or "medium"):
+        RandomCellsRemaining = 30
+    elif difficulty == "hard": 
+        RandomCellsRemaining = randint(20 , 29)
+    elif difficulty == "chaos":
+        RandomCellsRemaining = randint( 0 , 81)
+    else:
+        print("Erreur, la difficulté n'était pas choisi lors de la géneration du Sudoku.")
+    ##
+    ## --- Algorithme Facile
+    if difficulty == "easy":
+        # Verif Ligne
+        for Line in range(0,10):
+            TakenIndexListOnTheLine = []
+            for i in range(4):
+                randomIndex = randint[1,9]
+                TakenIndexListOnTheLine[Line][randomIndex] = randint(9)
+    ## --- Remplissage des cases vides
 
+    ## --- Verification si les contraintes sont respectes
+
+
+            
+
+                
+
+            
+
+    return None
+        
+    #while RandomCellsRemaining >= 0:
+    
+    #return board
+
+
+#global Sudoku_RigidCells
+#Sudoku_RigidCells = []
 # Chaque sous-liste est une région, notée de cette façon.
 # 1  2  3
 # 4  5  6
 # 7  8  9
-Sudoku_RigidCells = []
 # Liste des *cases* ( de 1 a 81 ) qui ne peuvent pas etres modifiees
 
 
