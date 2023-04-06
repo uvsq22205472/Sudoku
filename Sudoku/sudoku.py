@@ -276,6 +276,14 @@ barre_de_menus.add_cascade(label="Aide", menu=menu_aide)
 menu_aide.add_command(label="Regle du Sudoku",command=ouvrir_lien_regles)
 
 root.config(menu=barre_de_menus)
+#------------------------------------------------------Annuler------------------------------------------------------------
+"""fonctionne pas a refaire"""
+def annuler_partie():
+    root.destroy()
+    root.mainloop()
+
+annuler_button = Button(root, text="Annuler la partie", command=annuler_partie)
+annuler_button.place(x=605, y=220)
 
 #------------------------------------------------------Sauvegarde------------------------------------------------------------
 #https://www.quennec.fr/trucs-astuces/langages/python/python-le-module-pickle
@@ -356,9 +364,9 @@ def charger3():
 
 
 sauvegarde_button = Button(root, text="Sauvegarder", command=liste_sauvegarde)
-load_button = Button(root, text="Charger", command=liste_charger)
+charger_button = Button(root, text="Charger", command=liste_charger)
 sauvegarde_button.place(x=605, y=150)
-load_button.place(x=605, y=180)
+charger_button.place(x=605, y=180)
 
 #------------------------------------------------------FIN------------------------------------------------------------
 root.mainloop()
