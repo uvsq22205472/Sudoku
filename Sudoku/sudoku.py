@@ -338,28 +338,28 @@ annuler_button.place(x=605, y=220)
 
 #------------------------------------------------------Sauvegarde------------------------------------------------------------
 #https://www.quennec.fr/trucs-astuces/langages/python/python-le-module-pickle
+#On a mis en dictionnaire pour pas refaire 3x la meme fonction
+
+sauvegardes = {
+    'sauvegarde 1': 'sudoku.grille',
+    'sauvegarde 2': 'sudoku.grille2',
+    'sauvegarde 3': 'sudoku.grille3'
+}
+
+charges = {
+    'charge 1': 'sudoku.grille',
+    'charge 2': 'sudoku.grille2',
+    'charge 3': 'sudoku.grille3'
+}
+
 def liste_sauvegarde():
     sauvegarde_window = Toplevel(root)
     sauvegarde_window.title("Champs de saisie")
     InputWindowText = "Fenetre de sauvegarde"
     Label(sauvegarde_window, text=InputWindowText).pack()
     sauvegarde_window.geometry("330x120")
-    Button(sauvegarde_window, text='sauvegarde 1', command=sauvegarder).pack()
-    Button(sauvegarde_window, text='sauvegarde 2', command=sauvegarder2).pack()
-    Button(sauvegarde_window, text='sauvegarde 3', command=sauvegarder3).pack()
-
-"""Fait le en dictionnaire ou trouve un moyen de modifier le with open avec une fonction comme .itemconfig"""
-def sauvegarder():
-    with open('sudoku.grille', 'wb') as f1:
-        pickle.dump(Sudoku_liste_valeurs , f1)
-
-def sauvegarder2():
-    with open('sudoku.grille2', 'wb') as f1:
-        pickle.dump(Sudoku_liste_valeurs , f1)
-
-def sauvegarder3():
-    with open('sudoku.grille3', 'wb') as f1:
-        pickle.dump(Sudoku_liste_valeurs , f1)
+    for sauvegarde, fichier in sauvegardes.items():
+        Button(sauvegarde_window, text=sauvegarde, command=lambda f=fichier: sauvegarder(f)).pack()
 
 def liste_charger():
     sauvegarde_window = Toplevel(root)
@@ -367,57 +367,32 @@ def liste_charger():
     InputWindowText = "Fenetre de charger"
     Label(sauvegarde_window, text=InputWindowText).pack()
     sauvegarde_window.geometry("330x120")
-    Button(sauvegarde_window, text='charge 1', command=charger).pack()
-    Button(sauvegarde_window, text='charge 2', command=charger2).pack()
-    Button(sauvegarde_window, text='charge 3', command=charger3).pack()
+    for charge, fichier in charges.items():
+        Button(sauvegarde_window, text=charge, command=lambda f=fichier: charger(f)).pack()
 
-def charger():
+def sauvegarder(fichier):
+    with open(fichier, 'wb') as f:
+        pickle.dump(Sudoku_liste_valeurs, f)
+
+def charger(fichier):
     global Sudoku_liste_valeurs
-    with open('sudoku.grille', 'rb') as f1:
-        Sudoku_liste_valeurs = pickle.load(f1)
-    #grille prise en charge
+    with open(fichier, 'rb') as f:
+        Sudoku_liste_valeurs = pickle.load(f)
+    # grille prise en charge
     for row in range(9):
         for col in range(9):
-            if Sudoku_liste_valeurs[row][col]!= 0:
-                x1 =(col/9)*Canvas_Width + (Canvas_Width/18)
-                y1 =(row/9)*Canvas_Height + (Canvas_Height/18)
-                current_cellule =Sudoku_Canvas.find_withtag("Cellule"+str(row)+";"+str(col))
+            if Sudoku_liste_valeurs[row][col] != 0:
+                x1 = (col / 9) * Canvas_Width + (Canvas_Width / 18)
+                y1 = (row / 9) * Canvas_Height + (Canvas_Height / 18)
+                current_cellule = Sudoku_Canvas.find_withtag("Cellule" + str(row) + ";" + str(col))
                 Sudoku_Canvas.itemconfig(current_cellule, text=Sudoku_liste_valeurs[row][col])
-                Sudoku_Canvas.create_text(x1, y1, font=("Helvetica", 16),text=Sudoku_liste_valeurs[row][col], tag="Cellule"+str(row)+";"+str(col))
-
-def charger2():
-    global Sudoku_liste_valeurs
-    with open('sudoku.grille2', 'rb') as f1:
-        Sudoku_liste_valeurs = pickle.load(f1)
-    #grille prise en charge
-    for row in range(9):
-        for col in range(9):
-            if Sudoku_liste_valeurs[row][col]!= 0:
-                x1 =(col/9)*Canvas_Width + (Canvas_Width/18)
-                y1 =(row/9)*Canvas_Height + (Canvas_Height/18)
-                current_cellule =Sudoku_Canvas.find_withtag("Cellule"+str(row)+";"+str(col))
-                Sudoku_Canvas.itemconfig(current_cellule, text=Sudoku_liste_valeurs[row][col])
-                Sudoku_Canvas.create_text(x1, y1, font=("Helvetica", 16),text=Sudoku_liste_valeurs[row][col], tag="Cellule"+str(row)+";"+str(col))
-
-def charger3():
-    global Sudoku_liste_valeurs
-    with open('sudoku.grille3', 'rb') as f1:
-        Sudoku_liste_valeurs = pickle.load(f1)
-    #grille prise en charge
-    for row in range(9):
-        for col in range(9):
-            if Sudoku_liste_valeurs[row][col]!= 0:
-                x1 =(col/9)*Canvas_Width + (Canvas_Width/18)
-                y1 =(row/9)*Canvas_Height + (Canvas_Height/18)
-                current_cellule =Sudoku_Canvas.find_withtag("Cellule"+str(row)+";"+str(col))
-                Sudoku_Canvas.itemconfig(current_cellule, text=Sudoku_liste_valeurs[row][col])
-                Sudoku_Canvas.create_text(x1, y1, font=("Helvetica", 16),text=Sudoku_liste_valeurs[row][col], tag="Cellule"+str(row)+";"+str(col))
-
+                Sudoku_Canvas.create_text(x1, y1, font=("Helvetica", 16), text=Sudoku_liste_valeurs[row][col], tag="Cellule" + str(row) + ";" + str(col))
 
 sauvegarde_button = Button(root, text="Sauvegarder", command=liste_sauvegarde)
 charger_button = Button(root, text="Charger", command=liste_charger)
 sauvegarde_button.place(x=605, y=150)
 charger_button.place(x=605, y=180)
+
 
 #------------------------------------------------------FIN------------------------------------------------------------
 root.mainloop()
