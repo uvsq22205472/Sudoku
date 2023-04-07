@@ -25,7 +25,6 @@ root.geometry("750x600")
 
 Sudoku_Canvas = Canvas(root,bg='#CCCCCC', width= Canvas_Width, height= Canvas_Height)
 Sudoku_Canvas.grid(column=0,row=0,columnspan=20,rowspan=20)
-Sudoku_liste_valeurs = [[0 for j in range(9)] for i in range(9)]
 
 
 #----------------------------------------------Entrer valeur---------------------------------------------------------
@@ -96,83 +95,71 @@ def fenetre_input_valeur(event):
 
 #----------------------------------------------Géneration aléatoire de tableau ---------------------------------------------------------
 # Generation du tableau completement aleatoire
-def Sudoku_CreateBoard(difficulty: str):
+def Sudoku_GenerateBoard(difficulty: str):
     board = [[0 for i in range(9)] for j in range(9)]
     Sudoku_FillBoard(board)
-    Sudoku_UnfillBoard(board,difficulty)
+    Sudoku_UnfillBoard(board, difficulty)
+    print(board)
     return board
-def Board_ValidCheck(board: list, row: int, col: int, num: int):
-    """
-    faire docstring
-    """
-    for i in range(9):
-        # --> Verif si le meme nombre est dans la meme colonne ou ligne
-        if board[row][i] == num or board[i][col]:
-            return False
-    # --> Verif si le nombre est dans la meme region
-    region_row = row // 3 * 3
-    region_col = col // 3 * 3
-    for i in range(region_row, (region_row+3) ):
-        for j in range(region_col, (region_col + 3) ):
-            if board[i][j] == num:
-                return False
-def Board_EmptyCheck(board: list):
-    """Input: board => le tableau du jeu, donc Sudoku_liste_valeurs
-    faire docstring
-    """
-    for row in range(9):
-        for col in range(9):
-            if board[row][col] == 0:
-                return row,col
-    ## --------------
-    return None, None
 
 def Sudoku_FillBoard(board: list):
-    """faire docstring
-    """
-    ## --> https://www.sudokulovers.com/what-makes-Sudoku-easy-medium-or-hard
-    ## "Easy Sudoku puzzles come with at least three in each row, column, box, and number, along with 30 givens.
-    ## Hard Sudokus might come in the upper 20s, along with entire boxes or numbers unaccounted for."
-    row, col = Board_EmptyCheck(board)
-    ## -- > Si il y a pas de cellules vides, alors ca veut dire que le
-    ## -- tableau est rempli.
-    if row is None:
+    if not EmptyCellCheck(board):
         return True
-    for num in range(1,10):
-        if Board_ValidCheck(board,row,col,num):
-            board[row][col] = num
-    ## --- > Ici, on utilise la recursivite des fonctions a l'interieur des fonctions.
-        if Sudoku_FillBoard(board):
-            return True
-        # -- > Revenir en arriere si peut pas etre rempli avec le nombre actuel
-        board[row][col] = 0
+    
+    row, col = EmptyCellCheck(board)
+    values = list(range(1, 10))
+    random.shuffle(values)
+    
+    for val in values:
+        if ValidCellCheck(board, row, col, val):
+            board[row][col] = val
+            
+            if Sudoku_FillBoard(board):
+                return True
+            
+            board[row][col] = 0
+            
     return False
-def Sudoku_UnfillBoard(board: list,difficulty: str):
-    ## --> https://www.sudokulovers.com/what-makes-Sudoku-easy-medium-or-hard
-    ## "Easy Sudoku puzzles come with at least three in each row, column, box, and number, along with 30 givens.
-    ## Hard Sudokus might come in the upper 20s, along with entire boxes or numbers unaccounted for."
-    # --> Definition de nombre de cases a supprimer en fonction de difficulte
-    if difficulty == "easy":
-        CellsRemaining = 30
-    elif difficulty == "medium":
-        CellsRemaining = randint(25,29)
-    elif difficulty == "hard":
-        CellsRemaining = randint(15,20)
-    elif difficulty == "random":
-        CellsRemaining = randint(1,81)
-    else:
-        print("Erreur au niveau de la difficulte dans le de-remplissage du tableau.")
-    #
-    EmptyCellsNum = 81 - CellsRemaining
-    ###
-    for i in range(EmptyCellsNum):
-        row, col = randint(0,8), randint(0,8)
-        while board[row][col] == 0:
-            # Si la cellule est vide, trouver une autre
-            row, col = randint(0,8), randint(0,8)
-        board[row][col] = 0
-    return board
 
+def EmptyCellCheck(board: list):
+    for i in range(9):
+        for j in range(9):
+            if board[i][j] == 0:
+                return (i, j)
+    return None
+
+def ValidCellCheck(board: list, row: int, col: int, val: int):
+    for i in range(9):
+        if board[row][i] == val or board[i][col] == val:
+            return False
+        
+    r = row - row % 3
+    c = col - col % 3
+    for i in range(3):
+        for j in range(3):
+            if board[r+i][c+j] == val:
+                return False
+    return True
+
+def Sudoku_UnfillBoard(board: list, difficulty: str):
+    if difficulty == 'easy':
+        CellsToRemove = randint(35, 45)
+    elif difficulty == 'medium':
+        CellsToRemove = randint(46, 55)
+    elif difficulty == 'hard':
+        CellsToRemove = randint(56, 65)
+    else:
+        print("Erreur: difficulté n'est pas disponible")
+        return False
+    
+    for i in range(CellsToRemove):
+        row = random.randint(0, 8)
+        col = random.randint(0, 8)
+        while board[row][col] == 0:
+            row = random.randint(0, 8)
+            col = random.randint(0, 8)
+        board[row][col] = 0
+    return True
 
 #----------------------------------------------Timer-----------------------------------------------------------------
 
@@ -224,90 +211,16 @@ for i in range(0, 9, 3):
         Sudoku_Canvas.create_rectangle(x1, y1, x2, y2, width=3)
         Sudoku_Canvas.create_rectangle(x1+2, y1+2, x2-2, y2-2, width=4, outline="white")
 
-
-#------------------------------------------------Difficultée---------------------------------------------------------
-
-
-def choose_difficulty_easy(facile):
-    facile = random.choice(grille_facile)
-
-boutton_difficulte_facile = Button(root,command=choose_difficulty_easy,text="Facile",bd=5,font = ("helvetica", "30"),padx=5, pady=5, bg="cyan")
-
-#Difficulter facile
-grille_facile = [[0, 5, 0, 0, 2, 0, 9, 0, 0], [0, 7, 0, 0, 5, 6, 1, 0, 0], [0, 3, 0, 1, 8, 7, 0, 2, 0],
-                 [0, 0, 0, 9, 0, 0, 0, 1, 5], [0, 4, 5, 0, 0, 0, 2, 9, 0], [4, 8, 0, 0, 0, 2, 0, 0, 0],
-                 [0, 9, 0, 5, 1, 4, 0, 3, 0], [0, 0, 3, 2, 4, 0, 0, 8, 0], [0, 0, 2, 0, 3, 0, 0, 7, 0]]
-
-grille_facile2 = [[0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                  [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                  [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0]]
-
-grille_facile3 = [[0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                  [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                  [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0]]
-
-grille_facile4 = [[0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                  [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                  [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0]]
-
-grille_facile5 = [[0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                  [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                  [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0]]
-
-#Diff Moyen
-grille_moyen =[[0, 0, 0, 0, 0, 9, 0, 0, 0], [5, 6, 8, 0, 1, 0, 4, 0, 0], [0, 0, 6, 0, 4, 0, 0, 7, 1],
-                 [2, 0, 0, 0, 3, 8, 0, 0, 0], [0, 0, 2, 6, 0, 0, 0, 0, 0], [0, 7, 0, 0, 0, 0, 2, 5, 0],
-                 [7, 3, 4, 0, 0, 0, 5, 9, 0], [1, 9, 7, 0, 0, 0, 0, 0, 0], [8, 0, 0, 7, 2, 0, 3, 0, 0]]
-
-grille_moyen2 = [[0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0]]
-
-grille_moyen3 = [[0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0]]
-
-grille_moyen4 = [[0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0]]
-
-grille_moyen5 = [[0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0]]
-
-
-#Difficulter difficile
-grille_difficile =[[0, 5, 8, 0, 0, 0, 0, 0, 0], [0, 6, 0, 0, 0, 0, 0, 3, 0], [0, 9, 6, 3, 0, 0, 0, 7, 0],
-                   [0, 0, 2, 0, 8, 7, 9, 0, 0], [3, 0, 0, 0, 6, 0, 5, 0, 0], [0, 0, 1, 0, 0, 0, 0, 0, 9],
-                   [0, 0, 0, 0, 0, 4, 0, 0, 0], [0, 0, 0, 5, 0, 8, 7, 0, 4], [0, 0, 0, 8, 0, 0, 2, 5, 0]]
-
-grille_difficile2 = [[0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                     [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                     [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0]]
-
-grille_difficile3 = [[0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                     [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                     [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0]]
-
-grille_difficile4 = [[0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                     [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                     [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0]]
-
-grille_difficile5 = [[0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                     [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                     [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0]]
-
-
-#---------------------------------------------------MENU-------------------------------------------------------------
+#------------------------------------------------MENU-------------------------------------------------------------
 
 #Barre de menu
 barre_de_menus = Menu(root)
  #menus difficultée
 menu_grille = Menu(barre_de_menus, tearoff=0)
 barre_de_menus.add_cascade(label="Choix Difficultée", menu=menu_grille)
-menu_grille.add_command(label="Grille Facile", command=grille_facile)
-menu_grille.add_command(label="Grille Moyen", command=grille_moyen)
-menu_grille.add_command(label="Grille Difficile", command=grille_difficile)
+menu_grille.add_command(label="Grille Facile", command=Sudoku_GenerateBoard("easy"))
+menu_grille.add_command(label="Grille Moyen", command=Sudoku_GenerateBoard("medium"))
+menu_grille.add_command(label="Grille Difficile", command=Sudoku_GenerateBoard("hard"))
 menu_grille.add_separator()
 menu_grille.add_command(label="Exit", command=root.quit)
     #menus aide
@@ -386,6 +299,7 @@ sauvegarde_button.place(x=605, y=150)
 charger_button.place(x=605, y=180)
 
 
-#------------------------------------------------------FIN------------------------------------------------------------
+#------------------------------------------------------FIN------------------------------------------------------------f
+Sudoku_liste_valeurs = Sudoku_GenerateBoard("easy")
 root.mainloop()
 #fin du code
