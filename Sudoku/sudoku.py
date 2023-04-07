@@ -96,91 +96,83 @@ def fenetre_input_valeur(event):
 
 #----------------------------------------------Géneration aléatoire de tableau ---------------------------------------------------------
 # Generation du tableau completement aleatoire
-def EasyAlgorithm(board : list):
-    # Verif Ligne
-    for Line in range(0,10):
-        TakenIndexListOnTheLine = []
-        for i in range(4):
-            randomIndex = randint[1,9]
-            TakenIndexListOnTheLine[Line][randomIndex] = randint(9)
-def FillBlanks(board : list):
-    return None
-def VerifyBoard(board: list):
-    return None
-def RandomBoard(board : list ,difficulty : str):
+def Sudoku_CreateBoard(difficulty: str):
+    board = [[0 for i in range(9)] for j in range(9)]
+    Sudoku_FillBoard(board)
+    Sudoku_UnfillBoard(board,difficulty)
+    return board
+def Board_ValidCheck(board: list, row: int, col: int, num: int):
+    """
+    faire docstring
+    """
+    for i in range(9):
+        # --> Verif si le meme nombre est dans la meme colonne ou ligne
+        if board[row][i] == num or board[i][col]:
+            return False
+    # --> Verif si le nombre est dans la meme region
+    region_row = row // 3 * 3
+    region_col = col // 3 * 3
+    for i in range(region_row, (region_row+3) ):
+        for j in range(region_col, (region_col + 3) ):
+            if board[i][j] == num:
+                return False
+def Board_EmptyCheck(board: list):
+    """Input: board => le tableau du jeu, donc Sudoku_liste_valeurs
+    faire docstring
+    """
+    for row in range(9):
+        for col in range(9):
+            if board[row][col] == 0:
+                return row,col
+    ## --------------
+    return None, None
+
+def Sudoku_FillBoard(board: list):
+    """faire docstring
+    """
     ## --> https://www.sudokulovers.com/what-makes-Sudoku-easy-medium-or-hard
-    ## Easy Sudoku puzzles come with at least three in each row, column, box, and number, along with 30 givens.
-    ## Hard Sudokus might come in the upper 20s, along with entire boxes or numbers unaccounted for.
-    ##
-    ## Definition des nombres des cases à remplir selon la difficulté 
-    ##
-    if difficulty == ("easy" or "medium"):
-        RandomCellsRemaining = 30
-    elif difficulty == "hard": 
-        RandomCellsRemaining = randint(20 , 29)
-    elif difficulty == "chaos":
-        RandomCellsRemaining = randint( 0 , 81)
-    else:
-        print("Erreur, la difficulté n'était pas choisi lors de la géneration du Sudoku.")
-    ##
-    ## --- Algorithme Facile
+    ## "Easy Sudoku puzzles come with at least three in each row, column, box, and number, along with 30 givens.
+    ## Hard Sudokus might come in the upper 20s, along with entire boxes or numbers unaccounted for."
+    row, col = Board_EmptyCheck(board)
+    ## -- > Si il y a pas de cellules vides, alors ca veut dire que le
+    ## -- tableau est rempli.
+    if row is None:
+        return True
+    for num in range(1,10):
+        if Board_ValidCheck(board,row,col,num):
+            board[row][col] = num
+    ## --- > Ici, on utilise la recursivite des fonctions a l'interieur des fonctions.
+        if Sudoku_FillBoard(board):
+            return True
+        # -- > Revenir en arriere si peut pas etre rempli avec le nombre actuel
+        board[row][col] = 0
+    return False
+def Sudoku_UnfillBoard(board: list,difficulty: str):
+    ## --> https://www.sudokulovers.com/what-makes-Sudoku-easy-medium-or-hard
+    ## "Easy Sudoku puzzles come with at least three in each row, column, box, and number, along with 30 givens.
+    ## Hard Sudokus might come in the upper 20s, along with entire boxes or numbers unaccounted for."
+    # --> Definition de nombre de cases a supprimer en fonction de difficulte
     if difficulty == "easy":
-        # Verif Ligne
-        for Line in range(0,10):
-            TakenIndexListOnTheLine = []
-            for i in range(4):
-                randomIndex = randint[1,9]
-                TakenIndexListOnTheLine[Line][randomIndex] = randint(9)
-    ## --- Remplissage des cases vides
+        CellsRemaining = 30
+    elif difficulty == "medium":
+        CellsRemaining = randint(25,29)
+    elif difficulty == "hard":
+        CellsRemaining = randint(15,20)
+    elif difficulty == "random":
+        CellsRemaining = randint(1,81)
+    else:
+        print("Erreur au niveau de la difficulte dans le de-remplissage du tableau.")
+    #
+    EmptyCellsNum = 81 - CellsRemaining
+    ###
+    for i in range(EmptyCellsNum):
+        row, col = randint(0,8), randint(0,8)
+        while board[row][col] == 0:
+            # Si la cellule est vide, trouver une autre
+            row, col = randint(0,8), randint(0,8)
+        board[row][col] = 0
+    return board
 
-    ## --- Verification si les contraintes sont respectes
-
-
-            
-
-                
-
-            
-
-    return None
-        
-    #while RandomCellsRemaining >= 0:
-    
-    #return board
-
-
-#global Sudoku_RigidCells
-#Sudoku_RigidCells = []
-# Chaque sous-liste est une région, notée de cette façon.
-# 1  2  3
-# 4  5  6
-# 7  8  9
-# Liste des *cases* ( de 1 a 81 ) qui ne peuvent pas etres modifiees
-
-
-
-
-
-#Sudoku_Dict = {}
-# ---> Dictionnaire contenant les cellules de Sudoku en clés (de gauche à droite, de haut en bas)
-# ---> et les valeurs étant le nombre contenus dans ces cellules.
-#for CellNumber in range(1,82):
-#    Sudoku_Dict[("Cell_"+str(CellNumber))] = "X"
-#print(Sudoku_Dict)
-#
-#Sudoku_RigidNumbers = []
-# ---> Liste / tableau contenant les cases ( ex: 20,51,3 ) qui ne pourront pas être changés au milieu
-# ---> de la partie.
-
-#ButtonText = str()
-#for vertical in range(0,9):
-#    horizontal = 0
-#    for horizontal in range(0,9):
-#        Sudoku_Button = Button(root,text=(str(horizontal+1)+","+str(vertical+1)), font=("helvetica", "12"), relief="groove")
-#        Sudoku_Button.grid(column=vertical,row=horizontal)
-#        Sudoku_Button["command"] = lambda Sudoku_Button = Sudoku_Button: click_case(Sudoku_Button)
-#        # --- > https://stackoverflow.com/questions/10865116/tkinter-creating-buttons-in-for-loop-passing-command-arguments
-#        # --- > Utilisation de la reponse de l'utilisateur "Joel" de StackOverflow.
 
 #----------------------------------------------Timer-----------------------------------------------------------------
 
