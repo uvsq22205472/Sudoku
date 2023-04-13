@@ -14,6 +14,12 @@ import pickle
 
 global Canvas_Height
 global Canvas_Width
+
+global Sudoku_liste_valeurs
+Sudoku_liste_valeurs = [[0 for i in range(9)] for j in range(9)]
+global Sudoku_Rigid_Cells
+Sudoku_Rigid_Cells = [[0 for i in range(9)] for j in range(9)]
+
 Canvas_Width = 600
 Canvas_Height = 600
 
@@ -62,7 +68,7 @@ def fenetre_input_valeur(event):
 
         """
         CurrentCellTag = "Cellule"+str(row)+";"+str(col)
-        value = entry.get()
+        value = entry.get() 
         if value.isnumeric() == True and 1<=int(value)<=9:
             value = int(value)
             Sudoku_liste_valeurs[row][col] = value
@@ -160,6 +166,34 @@ def Sudoku_UnfillBoard(board: list, difficulty: str):
             col = random.randint(0, 8)
         board[row][col] = 0
     return True
+#----------------------------------------------Difficulte------------------------------------------------------------
+def StartGame(difficulty: str):
+    Sudoku_liste_valeurs = Sudoku_GenerateBoard(difficulty)
+    Sudoku_Rigid_Cells =  Sudoku_liste_valeurs
+    for row in range(9):
+        for col in range(9):
+            if Sudoku_Rigid_Cells[row][col] != 0:
+                Sudoku_Rigid_Cells[row][col] = -1
+    demarrer_timer()
+    DifficultyWindow.destroy()
+    return Sudoku_liste_valeurs , Sudoku_Rigid_Cells
+
+
+def StartWindow():
+    global DifficultyWindow
+    DifficultyWindow = Tk()
+    DifficultyText = "Choissisez la difficulté de la grille."
+    Label(DifficultyWindow, text=DifficultyText).pack()
+    EasyBut = Button(DifficultyWindow, text="Facile", command=lambda: StartGame("easy"))
+    EasyBut.pack()
+
+    MedBut = Button(DifficultyWindow, text="Moyen", command=lambda: StartGame("medium"))
+    MedBut.pack()
+
+    HardBut = Button(DifficultyWindow, text="Difficile", command=lambda: StartGame("hard"))
+    HardBut.pack()
+
+    DifficultyWindow.mainloop()
 
 #----------------------------------------------Timer-----------------------------------------------------------------
 
@@ -190,7 +224,7 @@ def timer():
 timer_ecriture = Label(font=('Helvetica', 30), text='00:00')
 timer_ecriture.place(x=620, y=10)
 
-start_button = Button(text='Débuter', height=1, width=8, font=('Helvetica', 22), command=demarrer_timer)
+start_button = Button(text='Débuter', height=1, width=8, font=('Helvetica', 22), command=StartWindow)
 start_button.place(x=605, y=80)
 #----------------------------------------------Dessin Graphique---------------------------------------------------------
 
@@ -217,12 +251,12 @@ for i in range(0, 9, 3):
 barre_de_menus = Menu(root)
  #menus difficultée
 menu_grille = Menu(barre_de_menus, tearoff=0)
-barre_de_menus.add_cascade(label="Choix Difficultée", menu=menu_grille)
-menu_grille.add_command(label="Grille Facile", command=Sudoku_GenerateBoard("easy"))
-menu_grille.add_command(label="Grille Moyen", command=Sudoku_GenerateBoard("medium"))
-menu_grille.add_command(label="Grille Difficile", command=Sudoku_GenerateBoard("hard"))
-menu_grille.add_separator()
-menu_grille.add_command(label="Exit", command=root.quit)
+#barre_de_menus.add_cascade(label="Choix Difficultée", menu=menu_grille)
+#menu_grille.add_command(label="Grille Facile", command=Sudoku_GenerateBoard("easy"))
+#menu_grille.add_command(label="Grille Moyen", command=Sudoku_GenerateBoard("medium"))
+#menu_grille.add_command(label="Grille Difficile", command=Sudoku_GenerateBoard("hard"))
+#menu_grille.add_separator()
+#menu_grille.add_command(label="Exit", command=root.quit)
     #menus aide
 def ouvrir_lien_regles():
     webbrowser.open('https://sudoku.com/fr/comment-jouer/regles-de-sudoku-pour-les-debutants-complets/')
@@ -240,6 +274,8 @@ def annuler_partie():
         for col in range(9):
             if Sudoku_liste_valeurs[row][col] != 0:
                 Sudoku_liste_valeurs[row][col]= 0
+            if Sudoku_Rigid_Cells[row][col] != 0:
+                Sudoku_Rigid_Cells[row][col] = 0
     print(Sudoku_liste_valeurs)
 
 annuler_button = Button(root, text="Annuler la partie", command=annuler_partie)
