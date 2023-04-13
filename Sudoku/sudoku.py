@@ -235,8 +235,12 @@ root.config(menu=barre_de_menus)
 #------------------------------------------------------Annuler------------------------------------------------------------
 """fonctionne pas a refaire"""
 def annuler_partie():
-    root.destroy()
-    root.mainloop()
+    global Sudoku_liste_valeurs
+    for row in range(9):
+        for col in range(9):
+            if Sudoku_liste_valeurs[row][col] != 0:
+                Sudoku_liste_valeurs[row][col]= 0
+    print(Sudoku_liste_valeurs)
 
 annuler_button = Button(root, text="Annuler la partie", command=annuler_partie)
 annuler_button.place(x=605, y=220)
