@@ -205,21 +205,31 @@ secondes = 0
 def demarrer_timer():
     global timer_en_marche
     if not timer_en_marche:
-        timer()
         timer_en_marche = True
+        timer()
+
+def eteindre_timer():
+    global timer_en_marche
+    if timer_en_marche:
+        timer_en_marche = False
+        timer()
+
 
 def timer():
-    global minutes, secondes
-    secondes = secondes + 1
-    ecriture_minutes = f'{minutes}' if minutes > 9 else f'0{minutes}'
-    ecriture_secondes = f'{secondes}' if secondes > 9 else f'0{secondes}'
-    timer_ecriture.config(text=ecriture_minutes + ':' + ecriture_secondes)
-    if secondes == 60:
-        minutes = minutes + 1
+    if timer_en_marche == True:
+        global minutes, secondes
+        secondes = secondes + 1
+        ecriture_minutes = f'{minutes}' if minutes > 9 else f'0{minutes}'
+        ecriture_secondes = f'{secondes}' if secondes > 9 else f'0{secondes}'
+        timer_ecriture.config(text=ecriture_minutes + ':' + ecriture_secondes)
+        if secondes == 60:
+            minutes = minutes + 1
+            secondes = 0
+        global maj_timer
+        maj_timer = timer_ecriture.after(1000, timer)
+    else:
+        minutes = 0
         secondes = 0
-    global maj_timer
-    maj_timer = timer_ecriture.after(1000, timer)
-
 
 timer_ecriture = Label(font=('Helvetica', 30), text='00:00')
 timer_ecriture.place(x=620, y=10)
@@ -276,6 +286,7 @@ def annuler_partie():
                 Sudoku_liste_valeurs[row][col]= 0
             if Sudoku_Rigid_Cells[row][col] != 0:
                 Sudoku_Rigid_Cells[row][col] = 0
+    eteindre_timer()
     print(Sudoku_liste_valeurs)
 
 annuler_button = Button(root, text="Annuler la partie", command=annuler_partie)
