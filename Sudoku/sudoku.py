@@ -35,8 +35,6 @@ Sudoku_Canvas.grid(column=0,row=0,columnspan=20,rowspan=20)
 
 #----------------------------------------------Entrer valeur---------------------------------------------------------
 
-
-
 #Fonction qui permet de cliquer pour ensuite mettre un chiffre de 1 à 9
 
 def fenetre_input_valeur(event):
@@ -81,12 +79,12 @@ def fenetre_input_valeur(event):
                 Sudoku_Canvas.itemconfig(current_item, text=texte)
                 print(Sudoku_liste_valeurs)
             else:
-                messagebox.showerror(title="Erreur",message="Verifiez que votre nombre n'est pas présent déjà sur la ligne, colonne et région.")
+                messagebox.showerror(title="Erreur",message="Verifiez que votre valeur n'est pas déjà présente sur la ligne, la colonne ou encore la région.")
         elif value == "":
             erase_value()
-            # Si rien est entre dans, alors cela suprime la valeur dans la case et met 0 ou "rien" dans le tableau.
+            #Si rien est entre dans, alors cela suprime la valeur dans la case et met 0 dans le tableau.
         else:
-            messagebox.showerror(title="Erreur",message="Veuillez à entrer un nombre compris entre 1 et 9.")
+            messagebox.showerror(title="Erreur",message="Veillez à entrer un chiffre compris entre 1 et 9.")
         input_window.destroy()
         Sudoku_Update()
     def erase_value():
@@ -185,7 +183,7 @@ def Sudoku_UnfillBoard(board: list, difficulty: str):
     elif difficulty == 'hard':
         CellsToRemove = randint(56, 65)
     else:
-        print("Erreur: difficulté n'est pas disponible")
+        print("Erreur: la difficulté n'est pas disponible")
         return False
     
     for i in range(CellsToRemove):
@@ -240,7 +238,7 @@ def StartWindow():
     global DifficultyWindow
     DifficultyWindow = Toplevel()
     DifficultyWindow.title("Choix de la difficulté")
-    DifficultyText = "Choissisez une grille aleatoire ou pre-généré"
+    DifficultyText = "Choisissez une grille aléatoire ou pré-généré"
     DifficultyWindow.geometry("490x100")
     Label(DifficultyWindow, text=DifficultyText).grid(column=1)
     EasyBut = Button(DifficultyWindow,fg='green' ,text="Aléatoire : Facile", command=lambda: StartGame("easy"))
@@ -315,7 +313,7 @@ def Grilles_generes_auparavant (difficulty: str):
 timer_en_marche = False
 minutes = 0
 secondes = 0
-''''''
+'''Chronometre avec 3 fonctions demarrer, eteindre et redemarrer'''
 
 def demarrer_timer():
     global timer_en_marche
@@ -382,25 +380,18 @@ for i in range(0, 9, 3):
 
 #Barre de menu
 barre_de_menus = Menu(root)
- #menus difficultée
 menu_grille = Menu(barre_de_menus, tearoff=0)
-#barre_de_menus.add_cascade(label="Choix Difficultée", menu=menu_grille)
-#menu_grille.add_command(label="Grille Facile", command=Sudoku_GenerateBoard("easy"))
-#menu_grille.add_command(label="Grille Moyen", command=Sudoku_GenerateBoard("medium"))
-#menu_grille.add_command(label="Grille Difficile", command=Sudoku_GenerateBoard("hard"))
-#menu_grille.add_separator()
-#menu_grille.add_command(label="Exit", command=root.quit)
-    #menus aide
+
 def ouvrir_lien_regles():
     webbrowser.open('https://sudoku.com/fr/comment-jouer/regles-de-sudoku-pour-les-debutants-complets/')
 
 menu_aide = Menu(barre_de_menus, tearoff=0)
 barre_de_menus.add_cascade(label="Aide", menu=menu_aide)
-menu_aide.add_command(label="Regle du Sudoku",command=ouvrir_lien_regles)
+menu_aide.add_command(label="Règle du Sudoku",command=ouvrir_lien_regles)
 
 root.config(menu=barre_de_menus)
 #------------------------------------------------------Annuler------------------------------------------------------------
-"""fonction pour quitter, efface tout"""
+"""Fonction pour quitter, efface tout"""
 def annuler_partie():
     global Sudoku_liste_valeurs
     global Sudoku_Rigid_Cells
@@ -411,7 +402,7 @@ def annuler_partie():
     print(Sudoku_liste_valeurs)
     return Sudoku_liste_valeurs, Sudoku_Rigid_Cells
 
-annuler_button = Button(root, text="Annuler la partie", command=annuler_partie)
+annuler_button = Button(root, text="Annuler la partie", command=annuler_partie, bg='grey70', relief=RIDGE)
 annuler_button.place(x=605, y=220)
 
 #------------------------------------------------------Sauvegarde------------------------------------------------------------
@@ -433,7 +424,7 @@ charges = {
 def liste_sauvegarde():
     sauvegarde_window = Toplevel(root)
     sauvegarde_window.title("Champs de saisie")
-    InputWindowText = "Fenetre de sauvegarde"
+    InputWindowText = "Fenêtre de Sauvegarde"
     Label(sauvegarde_window, text=InputWindowText).pack()
     sauvegarde_window.geometry("330x120")
     for sauvegarde, fichier in sauvegardes.items():
@@ -442,7 +433,7 @@ def liste_sauvegarde():
 def liste_charger():
     sauvegarde_window = Toplevel(root)
     sauvegarde_window.title("Champs de saisie")
-    InputWindowText = "Fenetre de charger"
+    InputWindowText = "Fenêtre des parties Charger"
     Label(sauvegarde_window, text=InputWindowText).pack()
     sauvegarde_window.geometry("330x120")
     for charge, fichier in charges.items():
@@ -458,8 +449,8 @@ def charger(fichier):
         Sudoku_liste_valeurs = pickle.load(f)
     Sudoku_Update()
 
-sauvegarde_button = Button(root, text="Sauvegarder", command=liste_sauvegarde)
-charger_button = Button(root, text="Charger", command=liste_charger)
+sauvegarde_button = Button(root, text="Sauvegarder", command=liste_sauvegarde, bg='grey70', relief=RIDGE)
+charger_button = Button(root, text="Charger", command=liste_charger, bg='grey70', relief=RIDGE)
 sauvegarde_button.place(x=605, y=150)
 charger_button.place(x=605, y=180)
 #-----------------------------------------------------FIN DE JEU------------------------------------------------------
