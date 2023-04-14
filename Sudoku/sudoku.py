@@ -181,26 +181,80 @@ def StartGame(difficulty: str):
 
 def StartWindow():
     global DifficultyWindow
-    DifficultyWindow = Tk()
-    DifficultyText = "Choissisez la difficulté de la grille."
-    Label(DifficultyWindow, text=DifficultyText).pack()
-    EasyBut = Button(DifficultyWindow, text="Facile", command=lambda: StartGame("easy"))
-    EasyBut.pack()
+    DifficultyWindow = Toplevel(root)
+    DifficultyWindow.title("Choix de la difficulté")
+    DifficultyText = "Choissisez une grille aleatoire ou pre-généré"
+    DifficultyWindow.geometry("490x100")
+    Label(DifficultyWindow, text=DifficultyText).grid(column=1)
+    EasyBut = Button(DifficultyWindow,fg='green' ,text="Aléatoire : Facile", command=lambda: StartGame("easy"))
+    EasyBut.grid(column=0,row=4,padx=15)
 
-    MedBut = Button(DifficultyWindow, text="Moyen", command=lambda: StartGame("medium"))
-    MedBut.pack()
+    MedBut = Button(DifficultyWindow,fg='orange', text="Aléatoire : Moyen", command=lambda: StartGame("medium"))
+    MedBut.grid(column=0,row=6)
 
-    HardBut = Button(DifficultyWindow, text="Difficile", command=lambda: StartGame("hard"))
-    HardBut.pack()
+    HardBut = Button(DifficultyWindow,fg='red' ,text="Aléatoire : Difficile", command=lambda: StartGame("hard"))
+    HardBut.grid(column=0,row=8)
+
+    EasyButPreRemp = Button(DifficultyWindow, fg='green',text="Pré-généré : Facile", command=lambda: Grilles_generes_auparavant("facile"))
+    EasyButPreRemp.grid(column=4,row=4)
+
+    MedButPreRemp = Button(DifficultyWindow,fg='orange' ,text="Pré-généré : Moyen", command=lambda: Grilles_generes_auparavant("moyen"))
+    MedButPreRemp.grid(column=4,row=6)
+
+    HardButPreRemp = Button(DifficultyWindow,fg='red' ,text="Pré-généré : Difficile", command=lambda: Grilles_generes_auparavant("difficile"))
+    HardButPreRemp.grid(column=4,row=8)
 
     DifficultyWindow.mainloop()
+
+def Grilles_generes_auparavant(difficulter: str):
+    if difficulter == "facile":
+        Sudoku_liste_valeurs = [
+            [0, 0, 4, 0, 5, 0, 0, 0, 6],
+            [6, 0, 0, 2, 0, 0, 0, 9, 0],
+            [0, 0, 5, 0, 6, 0, 2, 0, 0],
+            [3, 0, 0, 0, 0, 8, 0, 0, 9],
+            [0, 8, 0, 0, 0, 0, 0, 7, 0],
+            [5, 0, 0, 7, 0, 0, 0, 0, 2],
+            [0, 0, 9, 0, 7, 0, 3, 0, 0],
+            [0, 3, 0, 0, 0, 1, 0, 0, 7],
+            [1, 0, 0, 0, 9, 0, 8, 0, 0]
+        ]
+    elif difficulter == "moyen":
+        Sudoku_liste_valeurs = [
+            [0, 0, 6, 7, 0, 0, 0, 4, 0],
+            [0, 0, 0, 0, 5, 0, 0, 0, 0],
+            [0, 0, 3, 4, 0, 0, 1, 0, 8],
+            [0, 0, 0, 0, 8, 0, 5, 0, 0],
+            [8, 0, 0, 0, 3, 0, 0, 0, 2],
+            [0, 0, 5, 0, 9, 0, 0, 0, 0],
+            [5, 0, 8, 0, 0, 6, 3, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 6, 0, 0, 0, 8, 4, 0, 0]
+        ]
+    elif difficulter == "difficile":
+        Sudoku_liste_valeurs = [
+            [0, 8, 0, 0, 0, 0, 0, 4, 0],
+            [0, 0, 0, 4, 0, 6, 0, 0, 0],
+            [7, 0, 0, 0, 0, 0, 0, 0, 3],
+            [0, 0, 0, 0, 2, 0, 0, 9, 0],
+            [0, 0, 5, 0, 0, 0, 8, 0, 0],
+            [0, 4, 0, 0, 0, 0, 0, 0, 0],
+            [6, 0, 0, 0, 0, 0, 0, 0, 1],
+            [9, 0, 0, 5, 0, 0, 0, 0, 0]
+        ]
+    else:
+        print("Difficulté non valide")
+        return None
+
+    return Sudoku_liste_valeurs
+
 
 #----------------------------------------------Timer-----------------------------------------------------------------
 
 timer_en_marche = False
 minutes = 0
 secondes = 0
-'''Modifie ici pour que ca commence quand tu met le module aleatoire'''
+''''''
 
 def demarrer_timer():
     global timer_en_marche
@@ -277,7 +331,7 @@ menu_aide.add_command(label="Regle du Sudoku",command=ouvrir_lien_regles)
 
 root.config(menu=barre_de_menus)
 #------------------------------------------------------Annuler------------------------------------------------------------
-"""fonctionne pas a refaire"""
+"""fonction pour quitter, efface tout"""
 def annuler_partie():
     global Sudoku_liste_valeurs
     for row in range(9):
