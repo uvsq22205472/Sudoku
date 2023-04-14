@@ -203,7 +203,10 @@ def StartGame(difficulty: str):
     Sudoku_liste_valeurs = Sudoku_GenerateBoard(difficulty)
     Sudoku_Rigid_Cells =  Sudoku_liste_valeurs
 # Mettre redemarrer timer
-    demarrer_timer()
+    if not timer_en_marche:
+        demarrer_timer()
+    else:
+        redemarrer_timer()
     Sudoku_Update()
     DifficultyWindow.destroy()
     return Sudoku_liste_valeurs
@@ -295,8 +298,16 @@ def eteindre_timer():
     global timer_en_marche
     if timer_en_marche:
         timer_en_marche = False
+        timer_ecriture.after_cancel(maj_timer)
+        minutes = 0
+        secondes = 0
         timer()
 
+def redemarrer_timer():
+    global timer_en_marche
+    if timer_en_marche:
+        eteindre_timer()
+        demarrer_timer()
 
 def timer():
     if timer_en_marche == True:
