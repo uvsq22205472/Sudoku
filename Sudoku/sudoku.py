@@ -38,9 +38,6 @@ Sudoku_Canvas.grid(column=0,row=0,columnspan=20,rowspan=20)
 
 
 #Fonction qui permet de cliquer pour ensuite mettre un chiffre de 1 à 9
-def on_click(event):
-    return None
-
 
 def fenetre_input_valeur(event):
     #Position du clic
@@ -48,7 +45,8 @@ def fenetre_input_valeur(event):
     #Calculer la position de la case par rapport au clic
     col = int(x // (Canvas_Width / 9))
     row = int(y // (Canvas_Height / 9))
-    print(col,row)
+    print("ROW / COL :",row,col)
+    print("LIST :",Sudoku_liste_valeurs)
     #Fenetre
     input_window = Toplevel(root)
     input_window.title("Champs de saisie")
@@ -105,12 +103,20 @@ def fenetre_input_valeur(event):
 #----------------------------------------------Géneration aléatoire de tableau ---------------------------------------------------------
 # Generation du tableau completement aleatoire
 def Sudoku_GenerateBoard(difficulty: str):
-    board = [[0 for i in range(9)] for j in range(9)]
-    Sudoku_FillBoard(board)
-    Sudoku_UnfillBoard(board, difficulty)
-    print(board)
+    """Input : difficulty (str) = Difficulté choisie par l'utiliseur
+    Output : board (list) = Tableau de Sudoku utilisé par le jeu
+
+    Cette fonction génére un tableau de jeu de Sudoku complete avant de le vider selon la difficulté choisi.
+    La difficulté influence le nombre des cases à vider, puis cette fonction renvoie le tableau et met à jour le tableau pour
+    l'afficher.
+    
+    """
+    global Sudoku_liste_valeurs
+    Sudoku_FillBoard(Sudoku_liste_valeurs)
+    Sudoku_UnfillBoard(Sudoku_liste_valeurs, difficulty)
+    print(Sudoku_liste_valeurs)
     Sudoku_Update()
-    return board
+    return Sudoku_liste_valeurs
 
 def Sudoku_FillBoard(board: list):
     if not EmptyCellCheck(board):
@@ -172,43 +178,40 @@ def Sudoku_UnfillBoard(board: list, difficulty: str):
     return True
 #----------------------------------------------Difficulte------------------------------------------------------------
 def Sudoku_Update():
-    current_cellule = ()
+    global Sudoku_liste_valeurs
+    #print("ENTRY",Sudoku_liste_valeurs)
     row , col = 0, 0
     for row in range(9):
         for col in range(9):
+            CurrentCellTag = "Cellule"+str(row)+";"+str(col)
+            x1 , y1 = (col/9)*Canvas_Width + (Canvas_Width/18) , (row/9)*Canvas_Height + (Canvas_Height/18)
+            current_item = Sudoku_Canvas.find_withtag(CURRENT)
+            texte = Sudoku_Canvas.delete(CurrentCellTag)
             if Sudoku_liste_valeurs[row][col] != 0:
-                SudokuText = Sudoku_liste_valeurs[row][col]
-                x1 = (col / 9) * Canvas_Width + (Canvas_Width / 18)
-                y1 = (row / 9) * Canvas_Height + (Canvas_Height / 18)
-                current_cellule = Sudoku_Canvas.find_withtag("Cellule" + str(row) + ";" + str(col))
-                print(current_cellule)
-                print(current_cellule)
-                Sudoku_Canvas.itemconfig(current_cellule, text=SudokuText)
-                Sudoku_Canvas.create_text(x1, y1, font=("Helvetica", 16), text=SudokuText, tag="Cellule" + str(row) + ";" + str(col))
-            else: 
-                x1 = (col / 9) * Canvas_Width + (Canvas_Width / 18)
-                y1 = (row / 9) * Canvas_Height + (Canvas_Height / 18)
-                current_cellule = Sudoku_Canvas.find_withtag("Cellule" + str(row) + ";" + str(col))
-                Sudoku_Canvas.itemconfig(current_cellule, text="")
-    
-                
+                texte = Sudoku_Canvas.create_text(x1, y1, text=Sudoku_liste_valeurs[row][col], font=("Helvetica", 16),tag=CurrentCellTag)
+            else:
+                texte = Sudoku_Canvas.create_text(x1, y1, text="", font=("Helvetica", 16),tag=CurrentCellTag)
+            Sudoku_Canvas.itemconfig(current_item, text=texte)
+    #print("LAST",Sudoku_liste_valeurs)
+    return Sudoku_liste_valeurs
+     
 def StartGame(difficulty: str):
+    global Sudoku_liste_valeurs
+    global minutes , secondes
+
     Sudoku_liste_valeurs = [[0 for i in range(9)] for j in range(9)]
     Sudoku_liste_valeurs = Sudoku_GenerateBoard(difficulty)
     Sudoku_Rigid_Cells =  Sudoku_liste_valeurs
-    for row in range(9):
-        for col in range(9):
-            if Sudoku_Rigid_Cells[row][col] != 0:
-                Sudoku_Rigid_Cells[row][col] = -1
+# Mettre redemarrer timer
     demarrer_timer()
     Sudoku_Update()
     DifficultyWindow.destroy()
-    return Sudoku_liste_valeurs , Sudoku_Rigid_Cells
+    return Sudoku_liste_valeurs
 
 
 def StartWindow():
     global DifficultyWindow
-    DifficultyWindow = Tk()
+    DifficultyWindow = Toplevel()
     DifficultyWindow.title("Choix de la difficulté")
     DifficultyText = "Choissisez une grille aleatoire ou pre-généré"
     DifficultyWindow.geometry("490x100")
