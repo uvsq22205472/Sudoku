@@ -48,6 +48,7 @@ def fenetre_input_valeur(event):
     #Calculer la position de la case par rapport au clic
     col = int(x // (Canvas_Width / 9))
     row = int(y // (Canvas_Height / 9))
+    print(col,row)
     #Fenetre
     input_window = Toplevel(root)
     input_window.title("Champs de saisie")
@@ -86,11 +87,13 @@ def fenetre_input_valeur(event):
         else:
             messagebox.showerror(title="Erreur",message="Veuillez à entrer un nombre compris entre 1 et 9.")
         input_window.destroy()
+        Sudoku_Update()
     def erase_value():
         CurrentCellTag = "Cellule"+str(row)+";"+str(col)
         Sudoku_liste_valeurs[row][col]= 0
         texte = Sudoku_Canvas.delete(CurrentCellTag)
         input_window.destroy()
+        Sudoku_Update()
         return None
     #creation d'un bouton pour valider la saisie et placer la valeur dans la case du sudoku
     button = Button(input_window, text="Valider", command=placer_valeur)
@@ -106,6 +109,7 @@ def Sudoku_GenerateBoard(difficulty: str):
     Sudoku_FillBoard(board)
     Sudoku_UnfillBoard(board, difficulty)
     print(board)
+    Sudoku_Update()
     return board
 
 def Sudoku_FillBoard(board: list):
@@ -167,7 +171,29 @@ def Sudoku_UnfillBoard(board: list, difficulty: str):
         board[row][col] = 0
     return True
 #----------------------------------------------Difficulte------------------------------------------------------------
+def Sudoku_Update():
+    current_cellule = ()
+    row , col = 0, 0
+    for row in range(9):
+        for col in range(9):
+            if Sudoku_liste_valeurs[row][col] != 0:
+                SudokuText = Sudoku_liste_valeurs[row][col]
+                x1 = (col / 9) * Canvas_Width + (Canvas_Width / 18)
+                y1 = (row / 9) * Canvas_Height + (Canvas_Height / 18)
+                current_cellule = Sudoku_Canvas.find_withtag("Cellule" + str(row) + ";" + str(col))
+                print(current_cellule)
+                print(current_cellule)
+                Sudoku_Canvas.itemconfig(current_cellule, text=SudokuText)
+                Sudoku_Canvas.create_text(x1, y1, font=("Helvetica", 16), text=SudokuText, tag="Cellule" + str(row) + ";" + str(col))
+            else: 
+                x1 = (col / 9) * Canvas_Width + (Canvas_Width / 18)
+                y1 = (row / 9) * Canvas_Height + (Canvas_Height / 18)
+                current_cellule = Sudoku_Canvas.find_withtag("Cellule" + str(row) + ";" + str(col))
+                Sudoku_Canvas.itemconfig(current_cellule, text="")
+    
+                
 def StartGame(difficulty: str):
+    Sudoku_liste_valeurs = [[0 for i in range(9)] for j in range(9)]
     Sudoku_liste_valeurs = Sudoku_GenerateBoard(difficulty)
     Sudoku_Rigid_Cells =  Sudoku_liste_valeurs
     for row in range(9):
@@ -175,13 +201,14 @@ def StartGame(difficulty: str):
             if Sudoku_Rigid_Cells[row][col] != 0:
                 Sudoku_Rigid_Cells[row][col] = -1
     demarrer_timer()
+    Sudoku_Update()
     DifficultyWindow.destroy()
     return Sudoku_liste_valeurs , Sudoku_Rigid_Cells
 
 
 def StartWindow():
     global DifficultyWindow
-    DifficultyWindow = Toplevel(root)
+    DifficultyWindow = Tk()
     DifficultyWindow.title("Choix de la difficulté")
     DifficultyText = "Choissisez une grille aleatoire ou pre-généré"
     DifficultyWindow.geometry("490x100")
@@ -203,7 +230,6 @@ def StartWindow():
 
     HardButPreRemp = Button(DifficultyWindow,fg='red' ,text="Pré-généré : Difficile", command=lambda: Grilles_generes_auparavant("difficile"))
     HardButPreRemp.grid(column=4,row=8)
-
     DifficultyWindow.mainloop()
 
 def Grilles_generes_auparavant(difficulter: str):
@@ -333,15 +359,12 @@ root.config(menu=barre_de_menus)
 #------------------------------------------------------Annuler------------------------------------------------------------
 """fonction pour quitter, efface tout"""
 def annuler_partie():
-    global Sudoku_liste_valeurs
-    for row in range(9):
-        for col in range(9):
-            if Sudoku_liste_valeurs[row][col] != 0:
-                Sudoku_liste_valeurs[row][col]= 0
-            if Sudoku_Rigid_Cells[row][col] != 0:
-                Sudoku_Rigid_Cells[row][col] = 0
+    Sudoku_Rigid_Cells = [[0 for i in range(9)] for j in range(9)]
+    Sudoku_liste_valeurs = [[0 for i in range(9)] for j in range(9)]
     eteindre_timer()
+    Sudoku_Update()
     print(Sudoku_liste_valeurs)
+    return Sudoku_liste_valeurs, Sudoku_Rigid_Cells
 
 annuler_button = Button(root, text="Annuler la partie", command=annuler_partie)
 annuler_button.place(x=605, y=220)
@@ -388,15 +411,7 @@ def charger(fichier):
     global Sudoku_liste_valeurs
     with open(fichier, 'rb') as f:
         Sudoku_liste_valeurs = pickle.load(f)
-    # grille prise en charge
-    for row in range(9):
-        for col in range(9):
-            if Sudoku_liste_valeurs[row][col] != 0:
-                x1 = (col / 9) * Canvas_Width + (Canvas_Width / 18)
-                y1 = (row / 9) * Canvas_Height + (Canvas_Height / 18)
-                current_cellule = Sudoku_Canvas.find_withtag("Cellule" + str(row) + ";" + str(col))
-                Sudoku_Canvas.itemconfig(current_cellule, text=Sudoku_liste_valeurs[row][col])
-                Sudoku_Canvas.create_text(x1, y1, font=("Helvetica", 16), text=Sudoku_liste_valeurs[row][col], tag="Cellule" + str(row) + ";" + str(col))
+    Sudoku_Update()
 
 sauvegarde_button = Button(root, text="Sauvegarder", command=liste_sauvegarde)
 charger_button = Button(root, text="Charger", command=liste_charger)
@@ -406,5 +421,6 @@ charger_button.place(x=605, y=180)
 
 #------------------------------------------------------FIN------------------------------------------------------------f
 Sudoku_liste_valeurs = Sudoku_GenerateBoard("easy")
+Sudoku_Update()
 root.mainloop()
 #fin du code
