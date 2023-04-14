@@ -213,6 +213,7 @@ def Sudoku_Update():
                 texte = Sudoku_Canvas.create_text(x1, y1, text="", font=("Helvetica", 16),tag=CurrentCellTag)
             Sudoku_Canvas.itemconfig(current_item, text=texte)
     #print("LAST",Sudoku_liste_valeurs)
+    FinishCheck()
     return Sudoku_liste_valeurs
      
 def StartGame(difficulty: str):
@@ -461,9 +462,22 @@ sauvegarde_button = Button(root, text="Sauvegarder", command=liste_sauvegarde)
 charger_button = Button(root, text="Charger", command=liste_charger)
 sauvegarde_button.place(x=605, y=150)
 charger_button.place(x=605, y=180)
+#-----------------------------------------------------FIN DE JEU------------------------------------------------------
+def FinishCheck():
+    global Sudoku_liste_valeurs
+    for row in range(9):
+        for col in range(9):
+            if Sudoku_liste_valeurs[row][col] == 0:
+                return
+    global EndWindow
+    EndWindow = Toplevel()
+    EndWindow.title("Félicitations!")
+    EndText = "Vous avez terminé le SUDOKU"
+    EndWindow.geometry("490x100")
+    Label(EndWindow, text=EndText)
+    
 
-
-#------------------------------------------------------FIN------------------------------------------------------------f
+#--------------------------------------------------FIN DE PROGRAMME---------------------------------------------------
 Sudoku_Update()
 root.mainloop()
 #fin du code
