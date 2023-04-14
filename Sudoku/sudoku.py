@@ -199,9 +199,12 @@ def StartGame(difficulty: str):
     global Sudoku_liste_valeurs
     global minutes , secondes
 
-    Sudoku_liste_valeurs = [[0 for i in range(9)] for j in range(9)]
-    Sudoku_liste_valeurs = Sudoku_GenerateBoard(difficulty)
-    Sudoku_Rigid_Cells =  Sudoku_liste_valeurs
+    if difficulty == "easy" or difficulty == "medium" or difficulty == "hard":
+        Sudoku_liste_valeurs = [[0 for i in range(9)] for j in range(9)]
+        Sudoku_liste_valeurs = Sudoku_GenerateBoard(difficulty)
+        Sudoku_Rigid_Cells =  Sudoku_liste_valeurs
+    else:
+        Grilles_generes_auparavant(Sudoku_liste_valeurs, difficulty)
 # Mettre redemarrer timer
     if not timer_en_marche:
         demarrer_timer()
@@ -228,18 +231,18 @@ def StartWindow():
     HardBut = Button(DifficultyWindow,fg='red' ,text="Aléatoire : Difficile", command=lambda: StartGame("hard"))
     HardBut.grid(column=0,row=8)
 
-    EasyButPreRemp = Button(DifficultyWindow, fg='green',text="Pré-généré : Facile", command=lambda: Grilles_generes_auparavant("facile"))
+    EasyButPreRemp = Button(DifficultyWindow, fg='green',text="Pré-généré : Facile", command=lambda: StartGame("facile"))
     EasyButPreRemp.grid(column=4,row=4)
 
-    MedButPreRemp = Button(DifficultyWindow,fg='orange' ,text="Pré-généré : Moyen", command=lambda: Grilles_generes_auparavant("moyen"))
+    MedButPreRemp = Button(DifficultyWindow,fg='orange' ,text="Pré-généré : Moyen", command=lambda: StartGame("moyen"))
     MedButPreRemp.grid(column=4,row=6)
 
-    HardButPreRemp = Button(DifficultyWindow,fg='red' ,text="Pré-généré : Difficile", command=lambda: Grilles_generes_auparavant("difficile"))
+    HardButPreRemp = Button(DifficultyWindow,fg='red' ,text="Pré-généré : Difficile", command=lambda: StartGame("difficile"))
     HardButPreRemp.grid(column=4,row=8)
     DifficultyWindow.mainloop()
 
-def Grilles_generes_auparavant(difficulter: str):
-    if difficulter == "facile":
+def Grilles_generes_auparavant(Sudoku_liste_valeurs: list, difficulty: str):
+    if difficulty == "facile":
         Sudoku_liste_valeurs = [
             [0, 0, 4, 0, 5, 0, 0, 0, 6],
             [6, 0, 0, 2, 0, 0, 0, 9, 0],
@@ -251,7 +254,7 @@ def Grilles_generes_auparavant(difficulter: str):
             [0, 3, 0, 0, 0, 1, 0, 0, 7],
             [1, 0, 0, 0, 9, 0, 8, 0, 0]
         ]
-    elif difficulter == "moyen":
+    elif difficulty == "moyen":
         Sudoku_liste_valeurs = [
             [0, 0, 6, 7, 0, 0, 0, 4, 0],
             [0, 0, 0, 0, 5, 0, 0, 0, 0],
@@ -263,7 +266,7 @@ def Grilles_generes_auparavant(difficulter: str):
             [0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 6, 0, 0, 0, 8, 4, 0, 0]
         ]
-    elif difficulter == "difficile":
+    elif difficulty == "difficile":
         Sudoku_liste_valeurs = [
             [0, 8, 0, 0, 0, 0, 0, 4, 0],
             [0, 0, 0, 4, 0, 6, 0, 0, 0],
@@ -434,7 +437,6 @@ charger_button.place(x=605, y=180)
 
 
 #------------------------------------------------------FIN------------------------------------------------------------f
-Sudoku_liste_valeurs = Sudoku_GenerateBoard("easy")
 Sudoku_Update()
 root.mainloop()
 #fin du code
