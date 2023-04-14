@@ -204,7 +204,7 @@ def StartGame(difficulty: str):
         Sudoku_liste_valeurs = Sudoku_GenerateBoard(difficulty)
         Sudoku_Rigid_Cells =  Sudoku_liste_valeurs
     else:
-        Grilles_generes_auparavant(Sudoku_liste_valeurs, difficulty)
+        Grilles_generes_auparavant(difficulty)
 # Mettre redemarrer timer
     if not timer_en_marche:
         demarrer_timer()
@@ -241,7 +241,9 @@ def StartWindow():
     HardButPreRemp.grid(column=4,row=8)
     DifficultyWindow.mainloop()
 
-def Grilles_generes_auparavant(Sudoku_liste_valeurs: list, difficulty: str):
+def Grilles_generes_auparavant (difficulty: str):
+    global Sudoku_liste_valeurs
+
     if difficulty == "facile":
         Sudoku_liste_valeurs = [
             [0, 0, 4, 0, 5, 0, 0, 0, 6],
@@ -254,6 +256,7 @@ def Grilles_generes_auparavant(Sudoku_liste_valeurs: list, difficulty: str):
             [0, 3, 0, 0, 0, 1, 0, 0, 7],
             [1, 0, 0, 0, 9, 0, 8, 0, 0]
         ]
+        print("Facile")
     elif difficulty == "moyen":
         Sudoku_liste_valeurs = [
             [0, 0, 6, 7, 0, 0, 0, 4, 0],
@@ -266,6 +269,7 @@ def Grilles_generes_auparavant(Sudoku_liste_valeurs: list, difficulty: str):
             [0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 6, 0, 0, 0, 8, 4, 0, 0]
         ]
+        print("Moyen")
     elif difficulty == "difficile":
         Sudoku_liste_valeurs = [
             [0, 8, 0, 0, 0, 0, 0, 4, 0],
@@ -277,10 +281,11 @@ def Grilles_generes_auparavant(Sudoku_liste_valeurs: list, difficulty: str):
             [6, 0, 0, 0, 0, 0, 0, 0, 1],
             [9, 0, 0, 5, 0, 0, 0, 0, 0]
         ]
+        print("Difficile")
     else:
         print("Difficulté non valide")
         return None
-
+    Sudoku_Update()
     return Sudoku_liste_valeurs
 
 
