@@ -285,7 +285,6 @@ def Grilles_generes_auparavant (difficulty: str):
     else:
         print("Difficulté non valide")
         return None
-    Sudoku_Update()
     return Sudoku_liste_valeurs
 
 
