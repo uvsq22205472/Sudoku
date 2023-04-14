@@ -472,9 +472,12 @@ def FinishCheck():
     global EndWindow
     EndWindow = Toplevel()
     EndWindow.title("Fin de la partie !")
+    EndWindow.geometry("540x50")
+
     EndText1 = f"Félicitations! Vous avez fini la partie de Sudoku en : {int(minutes)} minutes et :{int(secondes):02d} secondes !"
-    EndWindow.geometry("490x100")
-    Label(EndWindow, text=EndText1).pack()
+    EndLabel = Label(EndWindow, text=EndText1, font=("Helvetica", 11), pady=10, bg='grey90')    
+    EndLabel.pack()
+
     eteindre_timer()
     EndWindow.mainloop()
     
