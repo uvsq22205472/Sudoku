@@ -256,7 +256,7 @@ def Grilles_generes_auparavant (difficulty: str):
             [0, 3, 0, 0, 0, 1, 0, 0, 7],
             [1, 0, 0, 0, 9, 0, 8, 0, 0]
         ]
-        print("Facile")
+        print(Sudoku_liste_valeurs)
     elif difficulty == "moyen":
         Sudoku_liste_valeurs = [
             [0, 0, 6, 7, 0, 0, 0, 4, 0],
@@ -269,19 +269,20 @@ def Grilles_generes_auparavant (difficulty: str):
             [0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 6, 0, 0, 0, 8, 4, 0, 0]
         ]
-        print("Moyen")
+        print(Sudoku_liste_valeurs)
     elif difficulty == "difficile":
         Sudoku_liste_valeurs = [
-            [0, 8, 0, 0, 0, 0, 0, 4, 0],
-            [0, 0, 0, 4, 0, 6, 0, 0, 0],
-            [7, 0, 0, 0, 0, 0, 0, 0, 3],
-            [0, 0, 0, 0, 2, 0, 0, 9, 0],
-            [0, 0, 5, 0, 0, 0, 8, 0, 0],
-            [0, 4, 0, 0, 0, 0, 0, 0, 0],
-            [6, 0, 0, 0, 0, 0, 0, 0, 1],
-            [9, 0, 0, 5, 0, 0, 0, 0, 0]
+            [0, 0, 0, 0, 0, 0, 6, 4, 0],
+            [5, 4, 0, 0, 0, 0, 8, 0, 7],
+            [0, 0, 0, 0, 8, 0, 0, 0, 1],
+            [9, 0, 0, 0, 6, 0, 0, 7, 0],
+            [0, 6, 3, 4, 0, 0, 1, 0, 5],
+            [0, 0, 0, 0, 7, 8, 0, 0, 0],
+            [0, 0, 4, 1, 0, 0, 0, 0, 0],
+            [3, 0, 6, 0, 0, 5, 0, 1, 8],
+            [1, 0, 0, 0, 0, 2, 0, 9, 0]
         ]
-        print("Difficile")
+        print(Sudoku_liste_valeurs)
     else:
         print("Difficulté non valide")
         return None
