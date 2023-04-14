@@ -70,15 +70,18 @@ def fenetre_input_valeur(event):
         value = entry.get() 
         if value.isnumeric() == True and 1<=int(value)<=9:
             value = int(value)
-            Sudoku_liste_valeurs[row][col] = value
-            #pour placer le texte + au milieux de la case (1/18)
-            x1 = (col/9)*Canvas_Width + (Canvas_Width/18)
-            y1 = (row/9)*Canvas_Height + (Canvas_Height/18)
-            current_item = Sudoku_Canvas.find_withtag(CURRENT)
-            texte = Sudoku_Canvas.delete(CurrentCellTag)
-            texte = Sudoku_Canvas.create_text(x1, y1, text=value, font=("Helvetica", 16),tag=CurrentCellTag)
-            Sudoku_Canvas.itemconfig(current_item, text=texte)
-            print(Sudoku_liste_valeurs)
+            if VerifContraintes(row,col, value) == True:
+                #pour placer le texte + au milieux de la case (1/18)
+                Sudoku_liste_valeurs[row][col] = value
+                x1 = (col/9)*Canvas_Width + (Canvas_Width/18)
+                y1 = (row/9)*Canvas_Height + (Canvas_Height/18)
+                current_item = Sudoku_Canvas.find_withtag(CURRENT)
+                texte = Sudoku_Canvas.delete(CurrentCellTag)
+                texte = Sudoku_Canvas.create_text(x1, y1, text=value, font=("Helvetica", 16),tag=CurrentCellTag)
+                Sudoku_Canvas.itemconfig(current_item, text=texte)
+                print(Sudoku_liste_valeurs)
+            else:
+                messagebox.showerror(title="Erreur",message="Verifiez que votre nombre n'est pas présent déjà sur la ligne, colonne et région.")
         elif value == "":
             erase_value()
             # Si rien est entre dans, alors cela suprime la valeur dans la case et met 0 ou "rien" dans le tableau.
@@ -99,6 +102,23 @@ def fenetre_input_valeur(event):
 
     erase_button = Button(input_window,text="Effacer", command=erase_value)
     erase_button.pack()
+def VerifContraintes(row, col, num):
+    # Verif pour les lignes
+    if num in Sudoku_liste_valeurs[row]:
+        return False
+    # Verif pour les colonnes
+    for i in range(len(Sudoku_liste_valeurs)):
+        if Sudoku_liste_valeurs[i][col] == num:
+            return False
+    # Verif pour le carree
+    SquareRow = (row // 3) * 3
+    SquareCol = (col // 3) * 3
+    for i in range(SquareRow, SquareCol + 3):
+        for j in range(SquareRow, SquareCol + 3):
+            if Sudoku_liste_valeurs[i][j] == Sudoku_liste_valeurs:
+                return False
+
+    return True
 
 #----------------------------------------------Géneration aléatoire de tableau ---------------------------------------------------------
 # Generation du tableau completement aleatoire
@@ -381,6 +401,8 @@ root.config(menu=barre_de_menus)
 #------------------------------------------------------Annuler------------------------------------------------------------
 """fonction pour quitter, efface tout"""
 def annuler_partie():
+    global Sudoku_liste_valeurs
+    global Sudoku_Rigid_Cells
     Sudoku_Rigid_Cells = [[0 for i in range(9)] for j in range(9)]
     Sudoku_liste_valeurs = [[0 for i in range(9)] for j in range(9)]
     eteindre_timer()
