@@ -472,9 +472,10 @@ def FinishCheck():
     global EndWindow
     EndWindow = Toplevel()
     EndWindow.title("Félicitations!")
-    EndText = "Vous avez terminé le SUDOKU"
+    EndText1 = "Vous avez terminé le SUDOKU!!!"
     EndWindow.geometry("490x100")
-    Label(EndWindow, text=EndText)
+    Label(EndWindow, text=EndText1).pack()
+    EndWindow.mainloop()
     
 
 #--------------------------------------------------FIN DE PROGRAMME---------------------------------------------------
