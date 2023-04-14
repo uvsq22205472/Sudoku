@@ -51,7 +51,7 @@ def fenetre_input_valeur(event):
     # --> https://datatofish.com/entry-box-tkinter/
     # --> https://stackoverflow.com/questions/42211865/how-to-add-text-to-a-toplevel-window
     InputWindowText = "\nVeuillez entrer une valeur comprise entre 1 et 9 puis Valider\nou cliquer sur Effacer pour effacer la valeur dans la case."
-    Label(input_window, text=InputWindowText).pack()
+    Label(input_window, text=InputWindowText, bg='grey90',height=3).pack()
     # -- -- --
     input_window.geometry("330x160")
 
@@ -95,10 +95,10 @@ def fenetre_input_valeur(event):
         Sudoku_Update()
         return None
     #creation d'un bouton pour valider la saisie et placer la valeur dans la case du sudoku
-    button = Button(input_window, text="Valider", command=placer_valeur)
+    button = Button(input_window, text="Valider", command=placer_valeur, bg='SeaGreen1')
     button.pack()
 
-    erase_button = Button(input_window,text="Effacer", command=erase_value)
+    erase_button = Button(input_window,text="Effacer", command=erase_value, bg='coral1')
     erase_button.pack()
 def VerifContraintes(row, col, num):
     # Verif pour les lignes
@@ -465,7 +465,7 @@ def FinishCheck():
     EndWindow.title("Fin de la partie !")
     EndWindow.geometry("540x50")
 
-    EndText1 = f"Félicitations! Vous avez fini la partie de Sudoku en : {int(minutes)} minutes et :{int(secondes):02d} secondes !"
+    EndText1 = f"Félicitations! Vous avez fini la partie de Sudoku en : {int(minutes)} minutes et {int(secondes):02d} secondes !"
     EndLabel = Label(EndWindow, text=EndText1, font=("Helvetica", 11), pady=10, bg='grey90')    
     EndLabel.pack()
 

@@ -16,9 +16,9 @@ Il faut fournir une interface graphique permettant de jouer au sudoku. Sachant q
 avoir une solution unique, l’interface doit pouvoir :
 ~~• Générer aléatoirement une grille partiellement remplie respectant la contrainte du sudoku.~~
 ~~• Permettre à l’usager de sélectionner une case et d’entrer un chiffre de 1 à 9 dans cette case.~~
-• Notifier l’utilisateur si le chiffre inséré ne respecte pas les contraintes du jeu.
+~~• Notifier l’utilisateur si le chiffre inséré ne respecte pas les contraintes du jeu.~~
 Votre programme doit également permettre de :
-— Proposer une panoplie de puzzles générés auparavant.
+~~— Proposer une panoplie de puzzles générés auparavant.~~
 — Mettre en évidence les erreurs en utilisant un code couleur (du rouge par exemple) pour montrer la contrainte qui n’est pas respectée.
 ~~— Pouvoir annuler une partie de sudoku.~~
 — ~~Effacer des chiffres déjà entrés au niveau des cases~~.
