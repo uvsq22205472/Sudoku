@@ -36,6 +36,16 @@ Sudoku_Canvas.grid(column=0,row=0,columnspan=20,rowspan=20)
 #----------------------------------------------Entrer valeur---------------------------------------------------------
 
 #Fonction qui permet de cliquer pour ensuite mettre un chiffre de 1 à 9
+global erreurs
+erreurs = 0
+
+def nb_erreurs(): 
+    global erreurs
+    return erreurs
+
+
+ecriture_nb_erreurs = Label(font=('Arial Black', 18), text=f"Erreurs: {nb_erreurs()}")
+ecriture_nb_erreurs.place(x=610, y=300)
 
 def fenetre_input_valeur(event):
     #Position du clic
@@ -61,9 +71,7 @@ def fenetre_input_valeur(event):
 
     #Placer dans la case du sudoku
     def placer_valeur():
-        """ docstring
-
-        """
+        global erreurs
         CurrentCellTag = "Cellule"+str(row)+";"+str(col)
         value = entry.get() 
         if value.isnumeric() == True and 1<=int(value)<=9:
@@ -79,14 +87,17 @@ def fenetre_input_valeur(event):
                 Sudoku_Canvas.itemconfig(current_item, text=texte)
                 print(Sudoku_liste_valeurs)
             else:
+                erreurs = erreurs + 1
                 messagebox.showerror(title="Erreur",message="Verifiez que votre valeur n'est pas déjà présente sur la ligne, la colonne ou encore la région.")
         elif value == "":
             erase_value()
             #Si rien est entre dans, alors cela suprime la valeur dans la case et met 0 dans le tableau.
         else:
+            erreurs = erreurs + 1
             messagebox.showerror(title="Erreur",message="Veillez à entrer un chiffre compris entre 1 et 9.")
         input_window.destroy()
         Sudoku_Update()
+        ecriture_nb_erreurs.config(text=f"Erreurs: {nb_erreurs()}")
     def erase_value():
         CurrentCellTag = "Cellule"+str(row)+";"+str(col)
         Sudoku_liste_valeurs[row][col]= 0
@@ -217,6 +228,10 @@ def Sudoku_Update():
 def StartGame(difficulty: str):
     global Sudoku_liste_valeurs
     global minutes , secondes
+    global erreurs
+
+    erreurs = 0
+    ecriture_nb_erreurs.config(text=f"Erreurs: {nb_erreurs()}")
 
     if difficulty == "easy" or difficulty == "medium" or difficulty == "hard":
         Sudoku_liste_valeurs = [[0 for i in range(9)] for j in range(9)]
@@ -395,10 +410,13 @@ root.config(menu=barre_de_menus)
 def annuler_partie():
     global Sudoku_liste_valeurs
     global Sudoku_Rigid_Cells
+    global erreurs
     Sudoku_Rigid_Cells = [[0 for i in range(9)] for j in range(9)]
     Sudoku_liste_valeurs = [[0 for i in range(9)] for j in range(9)]
     eteindre_timer()
     Sudoku_Update()
+    erreurs = 0
+    ecriture_nb_erreurs.config(text=f"Erreurs: {nb_erreurs()}")
     print(Sudoku_liste_valeurs)
     return Sudoku_liste_valeurs, Sudoku_Rigid_Cells
 
@@ -431,23 +449,27 @@ def liste_sauvegarde():
         Button(sauvegarde_window, text=sauvegarde, command=lambda f=fichier: sauvegarder(f)).pack()
 
 def liste_charger():
-    sauvegarde_window = Toplevel(root)
-    sauvegarde_window.title("Champs de saisie")
+    charge_window = Toplevel(root)
+    charge_window.title("Champs de saisie")
     InputWindowText = "Fenêtre des parties Charger"
-    Label(sauvegarde_window, text=InputWindowText).pack()
-    sauvegarde_window.geometry("330x120")
+    Label(charge_window, text=InputWindowText).pack()
+    charge_window.geometry("330x120")
     for charge, fichier in charges.items():
-        Button(sauvegarde_window, text=charge, command=lambda f=fichier: charger(f)).pack()
+        Button(charge_window, text=charge, command=lambda f=fichier: charger(f)).pack()
 
 def sauvegarder(fichier):
     with open(fichier, 'wb') as f:
         pickle.dump(Sudoku_liste_valeurs, f)
 
+
 def charger(fichier):
     global Sudoku_liste_valeurs
+    global erreurs
     with open(fichier, 'rb') as f:
         Sudoku_liste_valeurs = pickle.load(f)
     Sudoku_Update()
+    erreurs = 0
+    ecriture_nb_erreurs.config(text=f"Erreurs: {nb_erreurs()}")
 
 sauvegarde_button = Button(root, text="Sauvegarder", command=liste_sauvegarde, bg='grey70', relief=RIDGE)
 charger_button = Button(root, text="Charger", command=liste_charger, bg='grey70', relief=RIDGE)
@@ -463,9 +485,9 @@ def FinishCheck():
     global EndWindow
     EndWindow = Toplevel()
     EndWindow.title("Fin de la partie !")
-    EndWindow.geometry("540x50")
+    EndWindow.geometry("540x65")
 
-    EndText1 = f"Félicitations! Vous avez fini la partie de Sudoku en : {int(minutes)} minutes et {int(secondes):02d} secondes !"
+    EndText1 = f"Félicitations! Vous avez fini la partie de Sudoku en : {int(minutes)} minutes et {int(secondes):02d} secondes !\n Vous avez fait au totale : {int(erreurs)} erreurs"
     EndLabel = Label(EndWindow, text=EndText1, font=("Helvetica", 11), pady=10, bg='grey90')    
     EndLabel.pack()
 
