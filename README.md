@@ -26,9 +26,10 @@ Votre programme doit également permettre de :
 
 — Mettre en évidence les erreurs en utilisant un code couleur (du rouge par exemple) pour montrer la contrainte qui n’est pas respectée
 .
+
 ~~— Pouvoir annuler une partie de sudoku.~~
 
-— ~~Effacer des chiffres déjà entrés au niveau des cases~~.
+~~— Effacer des chiffres déjà entrés au niveau des cases~~.
 
 ~~— Sauvegarder l’état de jeu d’une grille et refaire une grille déjà résolue si l’usager le souhaite.~~
 
