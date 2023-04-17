@@ -95,20 +95,20 @@ def Fenetre_Entree_Valeur(event):
         if Valeur.isnumeric() == True and 1<=int(Valeur)<=9:
             Valeur = int(Valeur)
             if Verification_Contraintes(row,col, Valeur) == True:
-                #pour placer le Cellule_Text + au milieux de la case (1/18)
+                #pour placer le Texte_Cellule + au milieux de la case (1/18)
                 Sudoku_ListeValeurs[row][col] = Valeur
                 x1 = (col/9)*Canvas_Largeur + (Canvas_Largeur/18)
                 y1 = (row/9)*Canvas_Longeur + (Canvas_Longeur/18)
                 Cellule = Sudoku_Canvas.find_withtag(CURRENT)
-                Cellule_Text = Sudoku_Canvas.delete(CelluleSelectionee)
-                Cellule_Text = Sudoku_Canvas.create_text(x1, y1, text=Valeur, font=("Helvetica", 16),tag=CelluleSelectionee)
-                Sudoku_Canvas.itemconfig(Cellule, text=Cellule_Text)
+                Texte_Cellule = Sudoku_Canvas.delete(CelluleSelectionee)
+                Texte_Cellule = Sudoku_Canvas.create_text(x1, y1, text=Valeur, font=("Helvetica", 16),tag=CelluleSelectionee)
+                Sudoku_Canvas.itemconfig(Cellule, text=Texte_Cellule)
                 print(Sudoku_ListeValeurs)
             else:
                 Erreurs = Erreurs + 1
                 messagebox.showerror(title="Erreur",message="Verifiez que votre valeur n'est pas déjà présente sur la ligne, la colonne ou encore la région.")
         elif Valeur == "":
-            erase_value()
+            Effacer_Valeur()
             #Si rien est entre dans, alors cela suprime la valeur dans la case et met 0 dans le tableau.
         else:
             Erreurs = Erreurs + 1
@@ -116,31 +116,29 @@ def Fenetre_Entree_Valeur(event):
         Fenetre_Entree.destroy()
         Sudoku_Update()
         Ecriture_Nombre_Erreurs.config(text=f"Erreurs: {Nombre_Erreurs()}")
-    def erase_value():
+    def Effacer_Valeur():
         """
-        imput: erase_value (str) = effacer les valeur précédant 
-        output : nope ceci signifie que les casse sont vide 
-        Cette fonction d'enlever des valeurs de certaine casse 
+        Cette fonction efface la valeur dans la case selectionée.
         """
         CelluleSelectionee = "Cellule"+str(row)+";"+str(col)
         Sudoku_ListeValeurs[row][col]= 0
-        Cellule_Text = Sudoku_Canvas.delete(CelluleSelectionee)
+        Texte_Cellule = Sudoku_Canvas.delete(CelluleSelectionee)
         Fenetre_Entree.destroy()
         Sudoku_Update()
         return None
     #creation d'un bouton pour valider la saisie et placer la valeur dans la case du sudoku
-    button = Button(Fenetre_Entree, text="Valider", command=Placer_Valeur, bg='SeaGreen1')
-    button.pack()
+    Bouton_Valider = Button(Fenetre_Entree, text="Valider", command=Placer_Valeur, bg='SeaGreen1')
+    Bouton_Valider.pack()
 
-    erase_button = Button(Fenetre_Entree,text="Effacer", command=erase_value, bg='coral1')
-    erase_button.pack()
+    Bouton_Effacer = Button(Fenetre_Entree,text="Effacer", command=Effacer_Valeur, bg='coral1')
+    Bouton_Effacer.pack()
 def Verification_Contraintes(row, col, num):
     """
-    imput : row,col,num (int) = vérificatiob si la case valide les contraite du jeux 
-    output : false si les contrainte sont pas réspectés
-            trua si elle le sont 
-    Cette fonction permet de vérifier qu'il n'y a pas le meme nombres sur les meme ligne et colonne et que la 
-    configuration des nombres soit bien respectée 
+    Input : row, col, num (int) = ligne, colonne du nombre num saisi.
+    Output: False si les règles ne sont pas respectés
+            True au cas contraire.
+    Cette fonction permet de vérifier que le nombre num n'est pas présent sur la même ligne et colonne ainsi que
+    dans la même région 3x3
     """
     # Verif pour les lignes
     if num in Sudoku_ListeValeurs[row]:
@@ -172,55 +170,54 @@ def Sudoku_GenererTableau(difficulte: str):
     """
     global Sudoku_ListeValeurs
     Sudoku_FillBoard(Sudoku_ListeValeurs)
-    Sudoku_UnfillBoard(Sudoku_ListeValeurs, difficulte)
+    Sudoku_ViderTableau(Sudoku_ListeValeurs, difficulte)
     print(Sudoku_ListeValeurs)
     Sudoku_Update()
     return Sudoku_ListeValeurs
 
-def Sudoku_FillBoard(board: list):
+def Sudoku_FillBoard(tableau: list):
     """
-    Input: board (list) = 
+    Input: tableau (list) = 
     Output: True = si le tableau est rempli
             False = si le tableau ne peut pas etre rempli
     Cette fonction permet de remplir chaque case du tableau lorsqu'elles sont vides.
 
     """
-    if not EmptyCellCheck(board):
+    if not EmptyCellCheck(tableau):
         return True
     
-    row, col = EmptyCellCheck(board)
+    row, col = EmptyCellCheck(tableau)
     values = list(range(1, 10))
     random.shuffle(values)
     
     for val in values:
-        if ValidCellCheck(board, row, col, val):
-            board[row][col] = val
+        if ValidCellCheck(tableau, row, col, val):
+            tableau[row][col] = val
             
-            if Sudoku_FillBoard(board):
+            if Sudoku_FillBoard(tableau):
                 return True
             
-            board[row][col] = 0
+            tableau[row][col] = 0
             
     return False
 
-def EmptyCellCheck(board: list):
+def EmptyCellCheck(tableau: list):
     """
-    imput : bord (list) = vérification des casse vide 
-    output : (i,j) si y'a un 0 dans le tableaux 
-             none si il n'y a pas de 0 
-    Cette fonction permet de vérifier que chaque case du tableaux lorsqu'elle sont vide j'usqua la dernière  de la grille c'est à dire 
-    la 9 émé 
+    Input : tableau (list) : tableau à vérifier
+    Output: i,j (tuple): coordonné de la case vide
+            None si il y en a aucune.
+    Fonction qui permet de vérifier si il y a une case vide, et si oui où elle est.
     """
     
     for i in range(9):
         for j in range(9):
-            if board[i][j] == 0:
+            if tableau[i][j] == 0:
                 return (i, j)
     return None
 
-def ValidCellCheck(board: list, row: int, col: int, val: int):
+def ValidCellCheck(tableau: list, row: int, col: int, val: int):
     """
-    Input: board (list): le tableau à vérifier
+    Input: tableau (list): le tableau à vérifier
             row (int): ligne
             col (int): colonne
             val (int): valeur à vérifier
@@ -229,43 +226,44 @@ def ValidCellCheck(board: list, row: int, col: int, val: int):
 
     """
     for i in range(9):
-        if board[row][i] == val or board[i][col] == val:
+        if tableau[row][i] == val or tableau[i][col] == val:
             return False
         
     r = row - row % 3
     c = col - col % 3
     for i in range(3):
         for j in range(3):
-            if board[r+i][c+j] == val:
+            if tableau[r+i][c+j] == val:
                 return False
     return True
 
-def Sudoku_UnfillBoard(board: list, difficulte: str):
+def Sudoku_ViderTableau(tableau: list, difficulte: str):
     """
-    imput: board (list),dificulty(str) = remplir le tableaux en fonction du nive    aux de difficukté 
-    output: False = la difficulté n'est oas disponible 
-    True = quand le processuse de déremplissage est validé en fonction de la difficulté choisi 
-    Cette fonction permet d'effacer chaque case du tableaux lorsqu'elle sont remplis en fonction de la difficulté
-    c'est a dire  le nombres de case remplis sera en fonction du niveaux de difficulté (esay,normal,hard)
+    Input: tableau (list) : tableau à effacer
+            difficulte (str) : difficulté qui doit être égale à:
+                                "easy" "medium" "hard"
+    Output: False : si la difficulté ne respecte pas les normes
+            True : au cas de l'exécution correcte de la fonction.
+    Selon la difficulté, un nombre au hasard est choisi qui correspond au nombre des cellules à vider au coordoonées choisies au hasard.
 
     """
     if difficulte == 'easy':
-        CellsToRemove = randint(35, 45)
+        CellulesAVider = randint(35, 45)
     elif difficulte == 'medium':
-        CellsToRemove = randint(46, 55)
+        CellulesAVider = randint(46, 55)
     elif difficulte == 'hard':
-        CellsToRemove = randint(56, 65)
+        CellulesAVider = randint(56, 65)
     else:
         print("Erreur: la difficulté n'est pas disponible")
         return False
     
-    for i in range(CellsToRemove):
+    for i in range(CellulesAVider):
         row = random.randint(0, 8)
         col = random.randint(0, 8)
-        while board[row][col] == 0:
+        while tableau[row][col] == 0:
             row = random.randint(0, 8)
             col = random.randint(0, 8)
-        board[row][col] = 0
+        tableau[row][col] = 0
     return True
 #----------------------------------------------Difficulte------------------------------------------------------------
 def Sudoku_Update():
@@ -286,12 +284,12 @@ def Sudoku_Update():
             CelluleSelectionee = "Cellule"+str(row)+";"+str(col)
             x1 , y1 = (col/9)*Canvas_Largeur + (Canvas_Largeur/18) , (row/9)*Canvas_Longeur + (Canvas_Longeur/18)
             Cellule = Sudoku_Canvas.find_withtag(CURRENT)
-            Cellule_Text = Sudoku_Canvas.delete(CelluleSelectionee)
+            Texte_Cellule = Sudoku_Canvas.delete(CelluleSelectionee)
             if Sudoku_ListeValeurs[row][col] != 0:
-                Cellule_Text = Sudoku_Canvas.create_text(x1, y1, text=Sudoku_ListeValeurs[row][col], font=("Helvetica", 16),tag=CelluleSelectionee)
+                Texte_Cellule = Sudoku_Canvas.create_text(x1, y1, text=Sudoku_ListeValeurs[row][col], font=("Helvetica", 16),tag=CelluleSelectionee)
             else:
-                Cellule_Text = Sudoku_Canvas.create_text(x1, y1, text="", font=("Helvetica", 16),tag=CelluleSelectionee)
-            Sudoku_Canvas.itemconfig(Cellule, text=Cellule_Text)
+                Texte_Cellule = Sudoku_Canvas.create_text(x1, y1, text="", font=("Helvetica", 16),tag=CelluleSelectionee)
+            Sudoku_Canvas.itemconfig(Cellule, text=Texte_Cellule)
     #print("LAST",Sudoku_ListeValeurs)
     Verification_FinJeu()
     return Sudoku_ListeValeurs
