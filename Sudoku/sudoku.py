@@ -12,18 +12,18 @@ import random
 import webbrowser
 import pickle
 
-global Canvas_Height
-global Canvas_Width
+global Canvas_Longeur
+global Canvas_Largeur
 
-global Sudoku_liste_valeurs
-Sudoku_liste_valeurs = [[0 for i in range(9)] for j in range(9)]
-global Sudoku_Rigid_Cells
-Sudoku_Rigid_Cells = [[0 for i in range(9)] for j in range(9)]
+global Sudoku_ListeValeurs
+Sudoku_ListeValeurs = [[0 for i in range(9)] for j in range(9)]
+global Sudoku_ValeursImpermeables
+Sudoku_ValeursImpermeables = [[0 for i in range(9)] for j in range(9)]
 
-global IsGameStarted
-IsGameStarted = False
-Canvas_Width = 600
-Canvas_Height = 600
+global siJeuCommence
+siJeuCommence = False
+Canvas_Largeur = 600
+Canvas_Longeur = 600
 
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-Initialisation du tableau du jeu-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
@@ -33,133 +33,141 @@ root.geometry("750x600")
 # --> https://www.tutorialspoint.com/how-can-i-prevent-a-window-from-being-resized-with-tkinter
 root.resizable(False,False)
 
-Sudoku_Canvas = Canvas(root,bg='#CCCCCC', width= Canvas_Width, height= Canvas_Height)
+Sudoku_Canvas = Canvas(root,bg='#CCCCCC', width= Canvas_Largeur, height= Canvas_Longeur)
 Sudoku_Canvas.grid(column=0,row=0,columnspan=20,rowspan=20)
 
 
 #----------------------------------------------Entrer valeur---------------------------------------------------------
 
-global erreurs
-erreurs = 0
+global Erreurs
+Erreurs = 0
 
-def nb_erreurs():
+def Nombre_Erreurs():
     """
-    
+    Output: Erreurs ()
+    Fonction qui renvoie les erreurs.
     """
-    global erreurs
-    return erreurs
+    global Erreurs
+    return Erreurs
 
 
-ecriture_nb_erreurs = Label(font=('Arial Black', 18), text=f"Erreurs: {nb_erreurs()}")
-ecriture_nb_erreurs.place(x=610, y=300)
+Ecriture_Nombre_Erreurs = Label(font=('Arial Black', 18), text=f"Erreurs: {Nombre_Erreurs()}")
+Ecriture_Nombre_Erreurs.place(x=610, y=300)
 
-def fenetre_input_valeur(event):
+def Fenetre_Entree_Valeur(event):
     """
     
     """
     #Position du clic
     x, y = event.x, event.y
     #Calculer la position de la case par rapport au clic
-    col = int(x // (Canvas_Width / 9))
-    row = int(y // (Canvas_Height / 9))
+    col = int(x // (Canvas_Largeur / 9))
+    row = int(y // (Canvas_Longeur / 9))
     print("ROW / COL :",row,col)
-    print("LIST :",Sudoku_liste_valeurs)
-    print("Rigid Cells:",Sudoku_Rigid_Cells)
-    if (Sudoku_Rigid_Cells[row][col] == -1) or (IsGameStarted == False):
+    print("LIST :",Sudoku_ListeValeurs)
+    print("Rigid Cells:",Sudoku_ValeursImpermeables)
+    if (Sudoku_ValeursImpermeables[row][col] == -1) or (siJeuCommence == False):
         return None
     #Fenetre
-    input_window = Toplevel(root)
-    input_window.title("Champs de saisie")
-    # --> https://datatofish.com/entry-box-tkinter/
+    Fenetre_Entree = Toplevel(root)
+    Fenetre_Entree.title("Champs de saisie")
+    # --> https://datatofish.com/Entree-box-tkinter/
     # --> https://stackoverflow.com/questions/42211865/how-to-add-text-to-a-toplevel-window
-    InputWindowText = "\nVeuillez entrer une valeur comprise entre 1 et 9 puis Valider\nou cliquer sur Effacer pour effacer la valeur dans la case."
-    Label(input_window, text=InputWindowText, bg='grey90',height=3).pack()
+    Fenetre_Entree_Texte = "\nVeuillez entrer une valeur comprise entre 1 et 9 puis Valider\nou cliquer sur Effacer pour effacer la valeur dans la case."
+    Label(Fenetre_Entree, text=Fenetre_Entree_Texte, bg='grey90',height=3).pack()
     # -- -- --
-    input_window.geometry("330x160")
+    Fenetre_Entree.geometry("330x160")
 
     #Champs de saisie
-    entry = Entry(input_window)
-    entry.pack(pady=10)
+    Entree = Entry(Fenetre_Entree)
+    Entree.pack(pady=10)
 
     #Placer dans la case du sudoku
-    def placer_valeur():
-        global erreurs
-        CurrentCellTag = "Cellule"+str(row)+";"+str(col)
-        value = entry.get() 
-        if value.isnumeric() == True and 1<=int(value)<=9:
-            value = int(value)
-            if VerifContraintes(row,col, value) == True:
-                #pour placer le texte + au milieux de la case (1/18)
-                Sudoku_liste_valeurs[row][col] = value
-                x1 = (col/9)*Canvas_Width + (Canvas_Width/18)
-                y1 = (row/9)*Canvas_Height + (Canvas_Height/18)
-                current_item = Sudoku_Canvas.find_withtag(CURRENT)
-                texte = Sudoku_Canvas.delete(CurrentCellTag)
-                texte = Sudoku_Canvas.create_text(x1, y1, text=value, font=("Helvetica", 16),tag=CurrentCellTag)
-                Sudoku_Canvas.itemconfig(current_item, text=texte)
-                print(Sudoku_liste_valeurs)
+    def Placer_Valeur():
+        global Erreurs
+        CelluleSelectionee = "Cellule"+str(row)+";"+str(col)
+        Valeur = Entree.get() 
+        if Valeur.isnumeric() == True and 1<=int(Valeur)<=9:
+            Valeur = int(Valeur)
+            if Verification_Contraintes(row,col, Valeur) == True:
+                #pour placer le Cellule_Text + au milieux de la case (1/18)
+                Sudoku_ListeValeurs[row][col] = Valeur
+                x1 = (col/9)*Canvas_Largeur + (Canvas_Largeur/18)
+                y1 = (row/9)*Canvas_Longeur + (Canvas_Longeur/18)
+                Cellule = Sudoku_Canvas.find_withtag(CURRENT)
+                Cellule_Text = Sudoku_Canvas.delete(CelluleSelectionee)
+                Cellule_Text = Sudoku_Canvas.create_text(x1, y1, text=Valeur, font=("Helvetica", 16),tag=CelluleSelectionee)
+                Sudoku_Canvas.itemconfig(Cellule, text=Cellule_Text)
+                print(Sudoku_ListeValeurs)
             else:
-                erreurs = erreurs + 1
+                Erreurs = Erreurs + 1
                 messagebox.showerror(title="Erreur",message="Verifiez que votre valeur n'est pas déjà présente sur la ligne, la colonne ou encore la région.")
-        elif value == "":
+        elif Valeur == "":
             erase_value()
             #Si rien est entre dans, alors cela suprime la valeur dans la case et met 0 dans le tableau.
         else:
-            erreurs = erreurs + 1
+            Erreurs = Erreurs + 1
             messagebox.showerror(title="Erreur",message="Veillez à entrer un chiffre compris entre 1 et 9.")
-        input_window.destroy()
+        Fenetre_Entree.destroy()
         Sudoku_Update()
-        ecriture_nb_erreurs.config(text=f"Erreurs: {nb_erreurs()}")
+        Ecriture_Nombre_Erreurs.config(text=f"Erreurs: {Nombre_Erreurs()}")
     def erase_value():
-        CurrentCellTag = "Cellule"+str(row)+";"+str(col)
-        Sudoku_liste_valeurs[row][col]= 0
-        texte = Sudoku_Canvas.delete(CurrentCellTag)
-        input_window.destroy()
+        CelluleSelectionee = "Cellule"+str(row)+";"+str(col)
+        Sudoku_ListeValeurs[row][col]= 0
+        Cellule_Text = Sudoku_Canvas.delete(CelluleSelectionee)
+        Fenetre_Entree.destroy()
         Sudoku_Update()
         return None
     #creation d'un bouton pour valider la saisie et placer la valeur dans la case du sudoku
-    button = Button(input_window, text="Valider", command=placer_valeur, bg='SeaGreen1')
+    button = Button(Fenetre_Entree, text="Valider", command=Placer_Valeur, bg='SeaGreen1')
     button.pack()
 
-    erase_button = Button(input_window,text="Effacer", command=erase_value, bg='coral1')
+    erase_button = Button(Fenetre_Entree,text="Effacer", command=erase_value, bg='coral1')
     erase_button.pack()
-def VerifContraintes(row, col, num):
+def Verification_Contraintes(row, col, num):
     # Verif pour les lignes
-    if num in Sudoku_liste_valeurs[row]:
+    if num in Sudoku_ListeValeurs[row]:
         return False
     # Verif pour les colonnes
-    for i in range(len(Sudoku_liste_valeurs)):
-        if Sudoku_liste_valeurs[i][col] == num:
+    for i in range(len(Sudoku_ListeValeurs)):
+        if Sudoku_ListeValeurs[i][col] == num:
             return False
     # Verif pour le carree
     SquareRow = (row // 3) * 3
     SquareCol = (col // 3) * 3
     for i in range(SquareRow, SquareCol + 3):
         for j in range(SquareRow, SquareCol + 3):
-            if Sudoku_liste_valeurs[i][j] == Sudoku_liste_valeurs:
+            if Sudoku_ListeValeurs[i][j] == Sudoku_ListeValeurs:
                 return False
 
     return True
 
 #----------------------------------------------Géneration aléatoire de tableau ---------------------------------------------------------
 # Generation du tableau completement aleatoire
-def Sudoku_GenerateBoard(difficulty: str):
-    """Input : difficulty (str) = Difficulté choisie par l'utiliseur
-    Output : board (list) = Tableau de Sudoku utilisé par le jeu
+def Sudoku_GenererTableau(difficulte: str):
+    """Input : difficulte (str) = Difficulté choisie par l'utiliseur
+    Output : Sudoku_ListeValeurs (list) = Tableau de Sudoku utilisé par le jeu
 
     Cette fonction génére un tableau de jeu de Sudoku complete avant de le vider selon la difficulté choisi.
     La difficulté influence le nombre des cases à vider, puis cette fonction renvoie le tableau et met à jour le tableau pour
     l'afficher.
     
     """
-    global Sudoku_liste_valeurs
-    Sudoku_FillBoard(Sudoku_liste_valeurs)
-    Sudoku_UnfillBoard(Sudoku_liste_valeurs, difficulty)
-    print(Sudoku_liste_valeurs)
+    global Sudoku_ListeValeurs
+    Sudoku_FillBoard(Sudoku_ListeValeurs)
+    Sudoku_UnfillBoard(Sudoku_ListeValeurs, difficulte)
+    print(Sudoku_ListeValeurs)
     Sudoku_Update()
-    return Sudoku_liste_valeurs
+    return Sudoku_ListeValeurs
 
 def Sudoku_FillBoard(board: list):
+    """
+    Input: board (list) = 
+    Output: True = si le tableau est rempli
+            False = si le tableau ne peut pas etre rempli
+    Cette fonction permet de remplir chaque case du tableau lorsqu'elles sont vides.
+
+    """
     if not EmptyCellCheck(board):
         return True
     
@@ -179,6 +187,7 @@ def Sudoku_FillBoard(board: list):
     return False
 
 def EmptyCellCheck(board: list):
+    
     for i in range(9):
         for j in range(9):
             if board[i][j] == 0:
@@ -186,6 +195,15 @@ def EmptyCellCheck(board: list):
     return None
 
 def ValidCellCheck(board: list, row: int, col: int, val: int):
+    """
+    Input: board (list): le tableau à vérifier
+            row (int): ligne
+            col (int): colonne
+            val (int): valeur à vérifier
+
+    Cette fonction vérifie si la valeur généré est déja présente dans la colonne , ligne et carré.
+
+    """
     for i in range(9):
         if board[row][i] == val or board[i][col] == val:
             return False
@@ -198,12 +216,14 @@ def ValidCellCheck(board: list, row: int, col: int, val: int):
                 return False
     return True
 
-def Sudoku_UnfillBoard(board: list, difficulty: str):
-    if difficulty == 'easy':
+def Sudoku_UnfillBoard(board: list, difficulte: str):
+    """
+    """
+    if difficulte == 'easy':
         CellsToRemove = randint(35, 45)
-    elif difficulty == 'medium':
+    elif difficulte == 'medium':
         CellsToRemove = randint(46, 55)
-    elif difficulty == 'hard':
+    elif difficulte == 'hard':
         CellsToRemove = randint(56, 65)
     else:
         print("Erreur: la difficulté n'est pas disponible")
@@ -219,88 +239,118 @@ def Sudoku_UnfillBoard(board: list, difficulty: str):
     return True
 #----------------------------------------------Difficulte------------------------------------------------------------
 def Sudoku_Update():
-    global Sudoku_liste_valeurs
-    #print("ENTRY",Sudoku_liste_valeurs)
+    """
+    Input: Sudoku_ListeValeurs (list) : le tableau qui va être mis à jour
+    Output: Sudoku_ListeValeurs (list) : le tableau mis à jour
+
+    Cette fonction traverse le tableau et re-écrit dans chaque case le nombre correspondant. Cela sert à réinitialiser le tableau et mettre à jour les valeurs si il y
+    a une mauvaise correspendance entre le tableau du jeu et le tableau visuel.
+    Les 0 sont traduits comme des cases vides et sont donc montrés comme tels.
+
+    """
+    global Sudoku_ListeValeurs
+    #print("ENTRY",Sudoku_ListeValeurs)
     row , col = 0, 0
     for row in range(9):
         for col in range(9):
-            CurrentCellTag = "Cellule"+str(row)+";"+str(col)
-            x1 , y1 = (col/9)*Canvas_Width + (Canvas_Width/18) , (row/9)*Canvas_Height + (Canvas_Height/18)
-            current_item = Sudoku_Canvas.find_withtag(CURRENT)
-            texte = Sudoku_Canvas.delete(CurrentCellTag)
-            if Sudoku_liste_valeurs[row][col] != 0:
-                texte = Sudoku_Canvas.create_text(x1, y1, text=Sudoku_liste_valeurs[row][col], font=("Helvetica", 16),tag=CurrentCellTag)
+            CelluleSelectionee = "Cellule"+str(row)+";"+str(col)
+            x1 , y1 = (col/9)*Canvas_Largeur + (Canvas_Largeur/18) , (row/9)*Canvas_Longeur + (Canvas_Longeur/18)
+            Cellule = Sudoku_Canvas.find_withtag(CURRENT)
+            Cellule_Text = Sudoku_Canvas.delete(CelluleSelectionee)
+            if Sudoku_ListeValeurs[row][col] != 0:
+                Cellule_Text = Sudoku_Canvas.create_text(x1, y1, text=Sudoku_ListeValeurs[row][col], font=("Helvetica", 16),tag=CelluleSelectionee)
             else:
-                texte = Sudoku_Canvas.create_text(x1, y1, text="", font=("Helvetica", 16),tag=CurrentCellTag)
-            Sudoku_Canvas.itemconfig(current_item, text=texte)
-    #print("LAST",Sudoku_liste_valeurs)
-    FinishCheck()
-    return Sudoku_liste_valeurs
+                Cellule_Text = Sudoku_Canvas.create_text(x1, y1, text="", font=("Helvetica", 16),tag=CelluleSelectionee)
+            Sudoku_Canvas.itemconfig(Cellule, text=Cellule_Text)
+    #print("LAST",Sudoku_ListeValeurs)
+    Verification_FinJeu()
+    return Sudoku_ListeValeurs
      
-def StartGame(difficulty: str):
-    global Sudoku_liste_valeurs
-    global Sudoku_Rigid_Cells
-    global minutes , secondes
-    global IsGameStarted
-    global erreurs
+def Initialisation_Jeu(difficulte: str):
+    """
+    Input: difficulte (str): niveau de difficulté selectionné par l'utilisateur.
+    Output: Sudoku_ListeValeurs (list): tableau du jeu
 
-    erreurs = 0
-    ecriture_nb_erreurs.config(text=f"Erreurs: {nb_erreurs()}")
+    Cette fonction initialise / réinitialise le tableau du jeu selon la difficulté avec son tableau de nombres impérméables correspondant et
+    met en marche la détection d'erruers ainsi que le Timer.
 
-    if difficulty == "easy" or difficulty == "medium" or difficulty == "hard":
-        Sudoku_liste_valeurs = [[0 for i in range(9)] for j in range(9)]
-        Sudoku_liste_valeurs = Sudoku_GenerateBoard(difficulty)
-        Sudoku_Rigid_Cells =  [[0 for i in range(9)] for j in range(9)]
+    """
+    global Sudoku_ListeValeurs
+    global Sudoku_ValeursImpermeables
+    global Minutes , Secondes
+    global siJeuCommence
+    global Erreurs
+
+    Erreurs = 0
+    Ecriture_Nombre_Erreurs.config(text=f"Erreurs: {Nombre_Erreurs()}")
+
+    if difficulte == "easy" or difficulte == "medium" or difficulte == "hard":
+        Sudoku_ListeValeurs = [[0 for i in range(9)] for j in range(9)]
+        Sudoku_ListeValeurs = Sudoku_GenererTableau(difficulte)
+        Sudoku_ValeursImpermeables =  [[0 for i in range(9)] for j in range(9)]
         for i in range(9):
             for j in range(9):
-                if Sudoku_liste_valeurs[i][j] == 0:
-                    Sudoku_Rigid_Cells[i][j] = 0 
+                if Sudoku_ListeValeurs[i][j] == 0:
+                    Sudoku_ValeursImpermeables[i][j] = 0 
                 else:
-                    Sudoku_Rigid_Cells[i][j] = -1
+                    Sudoku_ValeursImpermeables[i][j] = -1
     else:
-        Grilles_generes_auparavant(difficulty)
-# Mettre redemarrer timer
-    if not timer_en_marche:
-        demarrer_timer()
+        Grilles_Generes_Auparavant(difficulte)
+# Mettre redemarrer Timer
+    if not Timer_en_Marche:
+        Demarrer_Timer()
     else:
-        redemarrer_timer()
+        Redemarre_Timer()
     Sudoku_Update()
-    DifficultyWindow.destroy()
-    IsGameStarted = True
-    return Sudoku_liste_valeurs
+    Fenetre_Difficulte.destroy()
+    siJeuCommence = True
+    return Sudoku_ListeValeurs
 
 
-def StartWindow():
-    global DifficultyWindow
-    DifficultyWindow = Toplevel()
-    DifficultyWindow.title("Choix de la difficulté")
-    DifficultyText = "Choisissez une grille aléatoire ou pré-généré"
-    DifficultyWindow.geometry("490x100")
-    Label(DifficultyWindow, text=DifficultyText).grid(column=1)
-    EasyBut = Button(DifficultyWindow,fg='green' ,text="Aléatoire : Facile", command=lambda: StartGame("easy"))
-    EasyBut.grid(column=0,row=4,padx=15)
+def Fenetre_Debuter():
+    """
+    Input: xxx
+    Output: xxx
 
-    MedBut = Button(DifficultyWindow,fg='orange', text="Aléatoire : Moyen", command=lambda: StartGame("medium"))
-    MedBut.grid(column=0,row=6)
+    Crée un tableau qui sert de sélectionner la difficulté ainsi que le mode (Aléatoire // Pré-généré)
+    """
+    global Fenetre_Difficulte
+    Fenetre_Difficulte = Toplevel()
+    Fenetre_Difficulte.title("Choix de la difficulté")
+    Texte_Difficulte = "Choisissez une grille aléatoire ou pré-généré"
+    Fenetre_Difficulte.geometry("490x100")
+    Label(Fenetre_Difficulte, text=Texte_Difficulte).grid(column=1)
+    Bouton_Facile = Button(Fenetre_Difficulte,fg='green' ,text="Aléatoire : Facile", command=lambda: Initialisation_Jeu("easy"))
+    Bouton_Facile.grid(column=0,row=4,padx=15)
 
-    HardBut = Button(DifficultyWindow,fg='red' ,text="Aléatoire : Difficile", command=lambda: StartGame("hard"))
-    HardBut.grid(column=0,row=8)
+    Bouton_Moyen = Button(Fenetre_Difficulte,fg='orange', text="Aléatoire : Moyen", command=lambda: Initialisation_Jeu("medium"))
+    Bouton_Moyen.grid(column=0,row=6)
 
-    EasyButPreRemp = Button(DifficultyWindow, fg='green',text="Pré-généré : Facile", command=lambda: StartGame("facile"))
-    EasyButPreRemp.grid(column=4,row=4)
+    Bouton_Difficile = Button(Fenetre_Difficulte,fg='red' ,text="Aléatoire : Difficile", command=lambda: Initialisation_Jeu("hard"))
+    Bouton_Difficile.grid(column=0,row=8)
 
-    MedButPreRemp = Button(DifficultyWindow,fg='orange' ,text="Pré-généré : Moyen", command=lambda: StartGame("moyen"))
-    MedButPreRemp.grid(column=4,row=6)
+    Bouton_Facile_PreRempli = Button(Fenetre_Difficulte, fg='green',text="Pré-généré : Facile", command=lambda: Initialisation_Jeu("facile"))
+    Bouton_Facile_PreRempli.grid(column=4,row=4)
 
-    HardButPreRemp = Button(DifficultyWindow,fg='red' ,text="Pré-généré : Difficile", command=lambda: StartGame("difficile"))
-    HardButPreRemp.grid(column=4,row=8)
-    DifficultyWindow.mainloop()
+    Bouton_Moyen_PreRempli = Button(Fenetre_Difficulte,fg='orange' ,text="Pré-généré : Moyen", command=lambda: Initialisation_Jeu("moyen"))
+    Bouton_Moyen_PreRempli.grid(column=4,row=6)
 
-def Grilles_generes_auparavant (difficulty: str):
-    global Sudoku_liste_valeurs
+    Bouton_Difficle_PreRempli = Button(Fenetre_Difficulte,fg='red' ,text="Pré-généré : Difficile", command=lambda: Initialisation_Jeu("difficile"))
+    Bouton_Difficle_PreRempli.grid(column=4,row=8)
+    Fenetre_Difficulte.mainloop()
 
-    if difficulty == "facile":
-        Sudoku_liste_valeurs = [
+def Grilles_Generes_Auparavant (difficulte: str):
+    """
+    Input: difficulte (str): difficulté, ici soit "facile" "moyen" ou "difficile" uniquement ( les noms en anglais sont réservés pour les tableaux générés
+                             aléatoirement)
+    Output: Sudoku_ListeValeurs (list): tableau du jeu
+
+    Cette fonction remplace le tableau par un tableau prédéfini selon la difficulté. Si aucun n'est écrit alors une erreur apparaît.
+    """
+    global Sudoku_ListeValeurs
+
+    if difficulte == "facile":
+        Sudoku_ListeValeurs = [
             [0, 0, 4, 0, 5, 0, 0, 0, 6],
             [6, 0, 0, 2, 0, 0, 0, 9, 0],
             [0, 0, 5, 0, 6, 0, 2, 0, 0],
@@ -311,9 +361,9 @@ def Grilles_generes_auparavant (difficulty: str):
             [0, 3, 0, 0, 0, 1, 0, 0, 7],
             [1, 0, 0, 0, 9, 0, 8, 0, 0]
         ]
-        print(Sudoku_liste_valeurs)
-    elif difficulty == "moyen":
-        Sudoku_liste_valeurs = [
+        print(Sudoku_ListeValeurs)
+    elif difficulte == "moyen":
+        Sudoku_ListeValeurs = [
             [0, 0, 6, 7, 0, 0, 0, 4, 0],
             [0, 0, 0, 0, 5, 0, 0, 0, 0],
             [0, 0, 3, 4, 0, 0, 1, 0, 8],
@@ -324,9 +374,9 @@ def Grilles_generes_auparavant (difficulty: str):
             [0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 6, 0, 0, 0, 8, 4, 0, 0]
         ]
-        print(Sudoku_liste_valeurs)
-    elif difficulty == "difficile":
-        Sudoku_liste_valeurs = [
+        print(Sudoku_ListeValeurs)
+    elif difficulte == "difficile":
+        Sudoku_ListeValeurs = [
             [0, 9, 0, 0, 0, 5, 0, 0, 0],
             [4, 0, 0, 0, 0, 0, 8, 0, 0],
             [0, 0, 8, 2, 0, 3, 0, 6, 0],
@@ -337,185 +387,221 @@ def Grilles_generes_auparavant (difficulty: str):
             [0, 0, 0, 0, 4, 0, 0, 9, 0],
             [1, 0, 0, 9, 0, 2, 0, 0, 3]
         ]
-        print(Sudoku_liste_valeurs)
+        print(Sudoku_ListeValeurs)
     else:
         print("Difficulté non valide")
         return None
-    return Sudoku_liste_valeurs
+    return Sudoku_ListeValeurs
 
 
 #----------------------------------------------Timer-----------------------------------------------------------------
 
-timer_en_marche = False
-minutes = 0
-secondes = 0
+Timer_en_Marche = False
+Minutes = 0
+Secondes = 0
 '''Chronometre avec 3 fonctions demarrer, eteindre et redemarrer'''
 
-def demarrer_timer():
-    global timer_en_marche
-    if not timer_en_marche:
-        timer_en_marche = True
-        timer()
+def Demarrer_Timer():
+    """
+    Fonction qui demarre le timer si il n'est pas allumé déjà.
+    """
+    global Timer_en_Marche
+    if not Timer_en_Marche:
+        Timer_en_Marche = True
+        Timer()
 
-def eteindre_timer():
-    global timer_en_marche
-    if timer_en_marche:
-        timer_en_marche = False
-        timer_ecriture.after_cancel(maj_timer)
-        minutes = 0
-        secondes = 0
-        timer()
+def Arreter_Timer():
+    """
+    Fonction qui arrête le timer si il est allumé et le remet à 0.
+    """
+    global Timer_en_Marche
+    if Timer_en_Marche:
+        Timer_en_Marche = False
+        Ecriture_Timer.after_cancel(MAJ_Timer)
+        Minutes = 0
+        Secondes = 0
+        Timer()
 
-def redemarrer_timer():
-    global timer_en_marche
-    if timer_en_marche:
-        eteindre_timer()
-        demarrer_timer()
+def Redemarre_Timer():
+    """
+    Fonction qui rédemarre le timer sur la base des deux fonction précedentes.
+    """
+    global Timer_en_Marche
+    if Timer_en_Marche:
+        Arreter_Timer()
+        Demarrer_Timer()
 
-def timer():
-    if timer_en_marche == True:
-        global minutes, secondes
-        secondes = secondes + 1
-        ecriture_minutes = f'{minutes}' if minutes > 9 else f'0{minutes}'
-        ecriture_secondes = f'{secondes}' if secondes > 9 else f'0{secondes}'
-        timer_ecriture.config(text=ecriture_minutes + ':' + ecriture_secondes)
-        if secondes == 60:
-            minutes = minutes + 1
-            secondes = 0
-        global maj_timer
-        maj_timer = timer_ecriture.after(1000, timer)
+def Timer():
+    """
+    Fonction qui sert de minuteur et donne son écritures en minutes et secondes.
+    """
+    if Timer_en_Marche == True:
+        global Minutes, Secondes
+        Secondes = Secondes + 1
+        Ecriture_Minutes = f'{Minutes}' if Minutes > 9 else f'0{Minutes}'
+        Ecriture_Secondes = f'{Secondes}' if Secondes > 9 else f'0{Secondes}'
+        Ecriture_Timer.config(text=Ecriture_Minutes + ':' + Ecriture_Secondes)
+        if Secondes == 60:
+            Minutes = Minutes + 1
+            Secondes = 0
+        global MAJ_Timer
+        MAJ_Timer = Ecriture_Timer.after(1000, Timer)
     else:
-        minutes = 0
-        secondes = 0
+        Minutes = 0
+        Secondes = 0
 
-timer_ecriture = Label(font=('Helvetica', 30), text='00:00')
-timer_ecriture.place(x=620, y=10)
+Ecriture_Timer = Label(font=('Helvetica', 30), text='00:00')
+Ecriture_Timer.place(x=620, y=10)
 
-start_button = Button(text='Débuter', height=1, width=8, font=('Helvetica', 22), command=StartWindow)
-start_button.place(x=605, y=80)
+Bouton_Start = Button(text='Débuter', height=1, width=8, font=('Helvetica', 22), command=Fenetre_Debuter)
+Bouton_Start.place(x=605, y=80)
 #----------------------------------------------Dessin Graphique---------------------------------------------------------
 
 
 #boucle for pour dessiner les rectangles
 for i in range(0, 9):
     for j in range(0, 9):
-        x1, y1 = (j/9)*Canvas_Width, (i/9)*Canvas_Height
-        x2, y2 = ((j+1)/9)*Canvas_Width, ((i+1)/9)*Canvas_Height
+        x1, y1 = (j/9)*Canvas_Largeur, (i/9)*Canvas_Longeur
+        x2, y2 = ((j+1)/9)*Canvas_Largeur, ((i+1)/9)*Canvas_Longeur
         Rectangle = Sudoku_Canvas.create_rectangle(x1, y1, x2, y2, width=1, outline='gray',fill="gray90")
-        Sudoku_Canvas.tag_bind(Rectangle, '<Button-1>', fenetre_input_valeur)
+        Sudoku_Canvas.tag_bind(Rectangle, '<Button-1>', Fenetre_Entree_Valeur)
         Sudoku_Canvas.grid(row=i, column=j)
 #boucle for pour dessiner les regions
 for i in range(0, 9, 3):
     for j in range(0, 9, 3):
-        x1, y1 = (j/9)*Canvas_Width, (i/9)*Canvas_Height
-        x2, y2 = ((j+3)/9)*Canvas_Width, ((i+3)/9)*Canvas_Height
+        x1, y1 = (j/9)*Canvas_Largeur, (i/9)*Canvas_Longeur
+        x2, y2 = ((j+3)/9)*Canvas_Largeur, ((i+3)/9)*Canvas_Longeur
         Sudoku_Canvas.create_rectangle(x1, y1, x2, y2, width=3)
         Sudoku_Canvas.create_rectangle(x1+2, y1+2, x2-2, y2-2, width=4, outline="white")
 
 #------------------------------------------------MENU-------------------------------------------------------------
 
 #Barre de menu
-barre_de_menus = Menu(root)
-menu_grille = Menu(barre_de_menus, tearoff=0)
+Barre_Menus = Menu(root)
+Menu_Grille = Menu(Barre_Menus, tearoff=0)
 
-def ouvrir_lien_regles():
+def Ouvrir_Lien_Regles():
     webbrowser.open('https://sudoku.com/fr/comment-jouer/regles-de-sudoku-pour-les-debutants-complets/')
 
-menu_aide = Menu(barre_de_menus, tearoff=0)
-barre_de_menus.add_cascade(label="Aide", menu=menu_aide)
-menu_aide.add_command(label="Règle du Sudoku",command=ouvrir_lien_regles)
+Menu_Aide = Menu(Barre_Menus, tearoff=0)
+Barre_Menus.add_cascade(label="Aide", menu=Menu_Aide)
+Menu_Aide.add_command(label="Règle du Sudoku",command=Ouvrir_Lien_Regles)
 
-root.config(menu=barre_de_menus)
+root.config(menu=Barre_Menus)
 #------------------------------------------------------Annuler------------------------------------------------------------
 """Fonction pour quitter, efface tout"""
-def annuler_partie():
-    global Sudoku_liste_valeurs
-    global Sudoku_Rigid_Cells
-    global IsGameStarted
-    global erreurs
-    Sudoku_Rigid_Cells = [[0 for i in range(9)] for j in range(9)]
-    Sudoku_liste_valeurs = [[0 for i in range(9)] for j in range(9)]
-    eteindre_timer()
-    Sudoku_Update()
-    erreurs = 0
-    ecriture_nb_erreurs.config(text=f"Erreurs: {nb_erreurs()}")
-    print(Sudoku_liste_valeurs)
-    IsGameStarted = False
-    return Sudoku_liste_valeurs, Sudoku_Rigid_Cells
+def Annuler_Partie():
+    """
+    Input: xxx
+    Output: Sudoku_ListeValeurs (list) : tableau du jeu annulé et remis à 0.
+            Sudoku_ValeursImpermeables (list) : tableau des cases imperméables du jeu remis à 0.
+    Cette fonction annule la partie en remettant à 0 les deux listes et le timer ainsi que les 0.
+    """
+    global Sudoku_ListeValeurs
+    global Sudoku_ValeursImpermeables
+    global siJeuCommence
+    global Erreurs
 
-annuler_button = Button(root, text="Annuler la partie", command=annuler_partie, bg='grey70', relief=RIDGE)
-annuler_button.place(x=605, y=220)
+    Sudoku_ValeursImpermeables = [[0 for i in range(9)] for j in range(9)]
+    Sudoku_ListeValeurs = [[0 for i in range(9)] for j in range(9)]
+    Arreter_Timer()
+    Sudoku_Update()
+    Erreurs = 0
+    Ecriture_Nombre_Erreurs.config(text=f"Erreurs: {Nombre_Erreurs()}")
+    print(Sudoku_ListeValeurs)
+    siJeuCommence = False
+    return Sudoku_ListeValeurs, Sudoku_ValeursImpermeables
+
+Bouton_Annuler = Button(root, text="Annuler la partie", command=Annuler_Partie, bg='grey70', relief=RIDGE)
+Bouton_Annuler.place(x=605, y=220)
 
 #------------------------------------------------------Sauvegarde------------------------------------------------------------
 #https://www.quennec.fr/trucs-astuces/langages/python/python-le-module-pickle
 #On a mis en dictionnaire pour pas refaire 3x la meme fonction
 
-sauvegardes = {
+Sauvegardes = {
     'sauvegarde 1': 'sudoku.grille',
     'sauvegarde 2': 'sudoku.grille2',
     'sauvegarde 3': 'sudoku.grille3'
 }
 
-charges = {
+Charges = {
     'charge 1': 'sudoku.grille',
     'charge 2': 'sudoku.grille2',
     'charge 3': 'sudoku.grille3'
 }
 
-def liste_sauvegarde():
-    sauvegarde_window = Toplevel(root)
-    sauvegarde_window.title("Champs de saisie")
-    InputWindowText = "Fenêtre de Sauvegarde"
-    Label(sauvegarde_window, text=InputWindowText).pack()
-    sauvegarde_window.geometry("330x120")
-    for sauvegarde, fichier in sauvegardes.items():
-        Button(sauvegarde_window, text=sauvegarde, command=lambda f=fichier: sauvegarder(f)).pack()
+def Liste_Sauvegardes():
+    """
+    Fonction occupé de la fenêtre des sauvegardes.
+    """
+    Fenetre_Sauvegardes = Toplevel(root)
+    Fenetre_Sauvegardes.title("Champs de saisie")
+    Fenetre_Entree_Texte = "Fenêtre de Sauvegarde"
+    Label(Fenetre_Sauvegardes, text=Fenetre_Entree_Texte).pack()
+    Fenetre_Sauvegardes.geometry("330x120")
+    for sauvegarde, fichier in Sauvegardes.items():
+        Button(Fenetre_Sauvegardes, text=sauvegarde, command=lambda f=fichier: Sauvegarder(f)).pack()
 
-def liste_charger():
-    charge_window = Toplevel(root)
-    charge_window.title("Champs de saisie")
-    InputWindowText = "Fenêtre des parties Charger"
-    Label(charge_window, text=InputWindowText).pack()
-    charge_window.geometry("330x120")
-    for charge, fichier in charges.items():
-        Button(charge_window, text=charge, command=lambda f=fichier: charger(f)).pack()
+def Liste_Charges():
+    """
+    Fonction occupé de la fenêtre des charges.
+    """
+    Fenetre_Charges = Toplevel(root)
+    Fenetre_Charges.title("Champs de saisie")
+    Fenetre_Entree_Texte = "Fenêtre des parties Charger"
+    Label(Fenetre_Charges, text=Fenetre_Entree_Texte).pack()
+    Fenetre_Charges.geometry("330x120")
+    for charge, fichier in Charges.items():
+        Button(Fenetre_Charges, text=charge, command=lambda f=fichier: Charger(f)).pack()
 
-def sauvegarder(fichier):
+def Sauvegarder(fichier):
+    """
+    Input: fichier (str) : le nom du fichier dans lequel va se trouver la sauvegarde.
+    Cette fonction remet la liste Sudoku_ListeValeurs dans le fichier.
+    """
     with open(fichier, 'wb') as f:
-        pickle.dump(Sudoku_liste_valeurs, f)
+        pickle.dump(Sudoku_ListeValeurs, f)
 
 
-def charger(fichier):
-    global Sudoku_liste_valeurs
-    global erreurs
+def Charger(fichier):
+    """
+    Input: fichier (str) : nom du fichier à chercher
+    Cette fonction récupère la liste Sudoku_ListeValeurs dans le fichier.
+    """
+    global Sudoku_ListeValeurs
+    global Erreurs
     with open(fichier, 'rb') as f:
-        Sudoku_liste_valeurs = pickle.load(f)
+        Sudoku_ListeValeurs = pickle.load(f)
     Sudoku_Update()
-    erreurs = 0
-    ecriture_nb_erreurs.config(text=f"Erreurs: {nb_erreurs()}")
+    Erreurs = 0
+    Ecriture_Nombre_Erreurs.config(text=f"Erreurs: {Nombre_Erreurs()}")
 
-sauvegarde_button = Button(root, text="Sauvegarder", command=liste_sauvegarde, bg='grey70', relief=RIDGE)
-charger_button = Button(root, text="Charger", command=liste_charger, bg='grey70', relief=RIDGE)
-sauvegarde_button.place(x=605, y=150)
-charger_button.place(x=605, y=180)
+Bouton_Sauvegarder = Button(root, text="Sauvegarder", command=Liste_Sauvegardes, bg='grey70', relief=RIDGE)
+Bouton_Charger = Button(root, text="Charger", command=Liste_Charges, bg='grey70', relief=RIDGE)
+Bouton_Sauvegarder.place(x=605, y=150)
+Bouton_Charger.place(x=605, y=180)
 #-----------------------------------------------------FIN DE JEU------------------------------------------------------
-def FinishCheck():
-    global Sudoku_liste_valeurs
+def Verification_FinJeu():
+    """
+    Cette fonction vérifie si toute les cases sont remplies et affiche le temps et le nombres d'erreurs commises.
+    """
+    global Sudoku_ListeValeurs
     for row in range(9):
         for col in range(9):
-            if Sudoku_liste_valeurs[row][col] == 0:
+            if Sudoku_ListeValeurs[row][col] == 0:
                 return
-    global EndWindow
-    EndWindow = Toplevel()
-    EndWindow.title("Fin de la partie !")
-    EndWindow.geometry("540x65")
+    global Fenetre_FinJeu
+    Fenetre_FinJeu = Toplevel()
+    Fenetre_FinJeu.title("Fin de la partie !")
+    Fenetre_FinJeu.geometry("540x65")
 
-    EndText1 = f"Félicitations! Vous avez fini la partie de Sudoku en : {int(minutes)} minutes et {int(secondes):02d} secondes !\n Vous avez fait au totale : {int(erreurs)} erreurs"
-    EndLabel = Label(EndWindow, text=EndText1, font=("Helvetica", 11), pady=10, bg='grey90')    
-    EndLabel.pack()
+    Texte_FinJeu1 = f"Félicitations! Vous avez fini la partie de Sudoku en : {int(Minutes)} Minutes et {int(Secondes):02d} Secondes !\n Vous avez fait au totale : {int(Erreurs)} Erreurs"
+    Label_FinJeu = Label(Fenetre_FinJeu, text=Texte_FinJeu1, font=("Helvetica", 11), pady=10, bg='grey90')    
+    Label_FinJeu.pack()
 
-    eteindre_timer()
-    EndWindow.mainloop()
+    Arreter_Timer()
+    Fenetre_FinJeu.mainloop()
     
 
 #--------------------------------------------------FIN DE PROGRAMME---------------------------------------------------
