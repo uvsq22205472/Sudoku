@@ -20,14 +20,18 @@ Sudoku_liste_valeurs = [[0 for i in range(9)] for j in range(9)]
 global Sudoku_Rigid_Cells
 Sudoku_Rigid_Cells = [[0 for i in range(9)] for j in range(9)]
 
+global IsGameStarted
+IsGameStarted = False
 Canvas_Width = 600
 Canvas_Height = 600
 
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-Initialisation du tableau du jeu-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 root = Tk()
-root.title("SUDOKU")
+root.title("Sudoku")
 root.geometry("750x600")
+# --> https://www.tutorialspoint.com/how-can-i-prevent-a-window-from-being-resized-with-tkinter
+root.resizable(False,False)
 
 Sudoku_Canvas = Canvas(root,bg='#CCCCCC', width= Canvas_Width, height= Canvas_Height)
 Sudoku_Canvas.grid(column=0,row=0,columnspan=20,rowspan=20)
@@ -35,11 +39,13 @@ Sudoku_Canvas.grid(column=0,row=0,columnspan=20,rowspan=20)
 
 #----------------------------------------------Entrer valeur---------------------------------------------------------
 
-#Fonction qui permet de cliquer pour ensuite mettre un chiffre de 1 à 9
 global erreurs
 erreurs = 0
 
-def nb_erreurs(): 
+def nb_erreurs():
+    """
+    
+    """
     global erreurs
     return erreurs
 
@@ -48,6 +54,9 @@ ecriture_nb_erreurs = Label(font=('Arial Black', 18), text=f"Erreurs: {nb_erreur
 ecriture_nb_erreurs.place(x=610, y=300)
 
 def fenetre_input_valeur(event):
+    """
+    
+    """
     #Position du clic
     x, y = event.x, event.y
     #Calculer la position de la case par rapport au clic
@@ -55,6 +64,9 @@ def fenetre_input_valeur(event):
     row = int(y // (Canvas_Height / 9))
     print("ROW / COL :",row,col)
     print("LIST :",Sudoku_liste_valeurs)
+    print("Rigid Cells:",Sudoku_Rigid_Cells)
+    if (Sudoku_Rigid_Cells[row][col] == -1) or (IsGameStarted == False):
+        return None
     #Fenetre
     input_window = Toplevel(root)
     input_window.title("Champs de saisie")
@@ -227,7 +239,9 @@ def Sudoku_Update():
      
 def StartGame(difficulty: str):
     global Sudoku_liste_valeurs
+    global Sudoku_Rigid_Cells
     global minutes , secondes
+    global IsGameStarted
     global erreurs
 
     erreurs = 0
@@ -236,7 +250,13 @@ def StartGame(difficulty: str):
     if difficulty == "easy" or difficulty == "medium" or difficulty == "hard":
         Sudoku_liste_valeurs = [[0 for i in range(9)] for j in range(9)]
         Sudoku_liste_valeurs = Sudoku_GenerateBoard(difficulty)
-        Sudoku_Rigid_Cells =  Sudoku_liste_valeurs
+        Sudoku_Rigid_Cells =  [[0 for i in range(9)] for j in range(9)]
+        for i in range(9):
+            for j in range(9):
+                if Sudoku_liste_valeurs[i][j] == 0:
+                    Sudoku_Rigid_Cells[i][j] = 0 
+                else:
+                    Sudoku_Rigid_Cells[i][j] = -1
     else:
         Grilles_generes_auparavant(difficulty)
 # Mettre redemarrer timer
@@ -246,6 +266,7 @@ def StartGame(difficulty: str):
         redemarrer_timer()
     Sudoku_Update()
     DifficultyWindow.destroy()
+    IsGameStarted = True
     return Sudoku_liste_valeurs
 
 
@@ -410,6 +431,7 @@ root.config(menu=barre_de_menus)
 def annuler_partie():
     global Sudoku_liste_valeurs
     global Sudoku_Rigid_Cells
+    global IsGameStarted
     global erreurs
     Sudoku_Rigid_Cells = [[0 for i in range(9)] for j in range(9)]
     Sudoku_liste_valeurs = [[0 for i in range(9)] for j in range(9)]
@@ -418,6 +440,7 @@ def annuler_partie():
     erreurs = 0
     ecriture_nb_erreurs.config(text=f"Erreurs: {nb_erreurs()}")
     print(Sudoku_liste_valeurs)
+    IsGameStarted = False
     return Sudoku_liste_valeurs, Sudoku_Rigid_Cells
 
 annuler_button = Button(root, text="Annuler la partie", command=annuler_partie, bg='grey70', relief=RIDGE)

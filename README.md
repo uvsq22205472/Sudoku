@@ -35,7 +35,7 @@ Votre programme doit également permettre de :
 
 — Proposer une aide, par exemple afficher toutes les cases contenant un chiffre donné.
 
-~~— Afficher et sauvegarder le temps nécessaire pour remplir la grille.~~ ainsi que le nombres d'erreurs comises.
+~~— Afficher et sauvegarder le temps nécessaire pour remplir la grille. ainsi que le nombres d'erreurs comises.~~
 
 — Afficher les cases sur lesquelles portent les contraintes (si l’usager le souhaite).
 
