@@ -56,7 +56,7 @@ Ecriture_Nombre_Erreurs.place(x=610, y=300)
 
 def Fenetre_Entree_Valeur(event):
     """
-    
+     Cette fonction permet de rentré dans la fenetre des valeur et les entré dans le tableaux 
     """
     #Position du clic
     x, y = event.x, event.y
@@ -84,6 +84,11 @@ def Fenetre_Entree_Valeur(event):
 
     #Placer dans la case du sudoku
     def Placer_Valeur():
+        """
+        Cette fonction permet de placer la valeur sélectionnée dans la cellule sélectionnée et vérifie si cette 
+        valeur respecte les régles et modifie le texte en conséquence.Si aucune valeur n'est entrée alors la valeur 
+        devient 0 et donc efface la casse 
+        """
         global Erreurs
         CelluleSelectionee = "Cellule"+str(row)+";"+str(col)
         Valeur = Entree.get() 
@@ -112,6 +117,11 @@ def Fenetre_Entree_Valeur(event):
         Sudoku_Update()
         Ecriture_Nombre_Erreurs.config(text=f"Erreurs: {Nombre_Erreurs()}")
     def erase_value():
+        """
+        imput: erase_value (str) = effacer les valeur précédant 
+        output : nope ceci signifie que les casse sont vide 
+        Cette fonction d'enlever des valeurs de certaine casse 
+        """
         CelluleSelectionee = "Cellule"+str(row)+";"+str(col)
         Sudoku_ListeValeurs[row][col]= 0
         Cellule_Text = Sudoku_Canvas.delete(CelluleSelectionee)
@@ -125,6 +135,13 @@ def Fenetre_Entree_Valeur(event):
     erase_button = Button(Fenetre_Entree,text="Effacer", command=erase_value, bg='coral1')
     erase_button.pack()
 def Verification_Contraintes(row, col, num):
+    """
+    imput : row,col,num (int) = vérificatiob si la case valide les contraite du jeux 
+    output : false si les contrainte sont pas réspectés
+            trua si elle le sont 
+    Cette fonction permet de vérifier qu'il n'y a pas le meme nombres sur les meme ligne et colonne et que la 
+    configuration des nombres soit bien respectée 
+    """
     # Verif pour les lignes
     if num in Sudoku_ListeValeurs[row]:
         return False
@@ -187,6 +204,13 @@ def Sudoku_FillBoard(board: list):
     return False
 
 def EmptyCellCheck(board: list):
+    """
+    imput : bord (list) = vérification des casse vide 
+    output : (i,j) si y'a un 0 dans le tableaux 
+             none si il n'y a pas de 0 
+    Cette fonction permet de vérifier que chaque case du tableaux lorsqu'elle sont vide j'usqua la dernière  de la grille c'est à dire 
+    la 9 émé 
+    """
     
     for i in range(9):
         for j in range(9):
@@ -218,6 +242,12 @@ def ValidCellCheck(board: list, row: int, col: int, val: int):
 
 def Sudoku_UnfillBoard(board: list, difficulte: str):
     """
+    imput: board (list),dificulty(str) = remplir le tableaux en fonction du nive    aux de difficukté 
+    output: False = la difficulté n'est oas disponible 
+    True = quand le processuse de déremplissage est validé en fonction de la difficulté choisi 
+    Cette fonction permet d'effacer chaque case du tableaux lorsqu'elle sont remplis en fonction de la difficulté
+    c'est a dire  le nombres de case remplis sera en fonction du niveaux de difficulté (esay,normal,hard)
+
     """
     if difficulte == 'easy':
         CellsToRemove = randint(35, 45)
